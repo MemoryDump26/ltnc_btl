@@ -1,7 +1,7 @@
 # ltnc_btl
 Bài tập lớn môn LTNC của Lê Trọng Bảo (21020608)
 
-### Project này sử dụng hệ thống make có trên linux.
+### Project này sử dụng hệ thống make có trên Linux.
 #### Build và chạy (Linux):
 ```
 make
@@ -15,3 +15,6 @@ Từ:
 Chuyển thành:
 ```
 #include <SDL.h>
+```
+### Game:
+Sử dụng WASD để di chuyển ô vuông.
