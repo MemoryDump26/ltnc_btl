@@ -32,8 +32,9 @@ void Game::gameLoop() {
         inputs.getInputs();
 
         if (inputs.isKeyHeld(SDLK_a)) player.moveLeft();
-        else if (inputs.isKeyHeld(SDLK_d)) player.moveRight();
-        else player.decelerate();
+        if (inputs.isKeyHeld(SDLK_d)) player.moveRight();
+        if (!inputs.isKeyHeld(SDLK_a) && !inputs.isKeyHeld(SDLK_d)) player.decelerate();
+        if (inputs.isKeyPressed(SDLK_SPACE)) player.jump();
 
         player.update();
 

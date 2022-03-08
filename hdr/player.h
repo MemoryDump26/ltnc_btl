@@ -18,6 +18,7 @@ public:
     void jump();
     void decelerate();
 private:
+    bool onGround;
     Graphics* graphics;
     SDL_Texture* sprite;
     SDL_Rect* spriteRect;
@@ -25,7 +26,6 @@ private:
     vector2d friction;
     vector2d velocity;
     vector2d acceleration;
-    bool jumpable;
 };
 
 #endif
