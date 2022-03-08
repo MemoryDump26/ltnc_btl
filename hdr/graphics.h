@@ -9,7 +9,7 @@ class Graphics {
 public:
     Graphics();
     ~Graphics();
-    void draw();
+    void present();
     SDL_Texture* loadTexture(const char[]);
     SDL_Renderer* getRenderer();
 private:

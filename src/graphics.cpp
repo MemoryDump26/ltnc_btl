@@ -26,7 +26,7 @@ SDL_Texture* Graphics::loadTexture(const char path[]) {
     return texture;
 }
 
-void Graphics::draw() {
+void Graphics::present() {
     SDL_RenderPresent(renderer);
 }
 

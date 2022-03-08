@@ -4,12 +4,14 @@ HEADERS_DIR = -I hdr
 
 CC = g++
 
+DEBUG = -g
+
 COMPILER_FLAGS = -Wall -Wextra --pedantic -Wsign-conversion
 
 LINKER_FLAGS = -lSDL2 -lSDL2_image
 
 game: $(obj)
-	$(CC) $(HEADERS_DIR) -o $@ $^ $(LINKER_FLAGS) $(COMPILER_FLAGS)
+	$(CC) $(DEBUG) $(HEADERS_DIR) -o $@ $^ $(LINKER_FLAGS) $(COMPILER_FLAGS)
 
 .PHONY: clean
 clean:

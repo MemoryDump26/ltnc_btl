@@ -3,6 +3,7 @@
     "arguments": [
       "/usr/bin/g++",
       "-c",
+      "-g",
       "-I",
       "hdr",
       "-Wall",
@@ -21,6 +22,7 @@
     "arguments": [
       "/usr/bin/g++",
       "-c",
+      "-g",
       "-I",
       "hdr",
       "-Wall",
@@ -39,6 +41,7 @@
     "arguments": [
       "/usr/bin/g++",
       "-c",
+      "-g",
       "-I",
       "hdr",
       "-Wall",
@@ -57,6 +60,7 @@
     "arguments": [
       "/usr/bin/g++",
       "-c",
+      "-g",
       "-I",
       "hdr",
       "-Wall",
@@ -69,6 +73,44 @@
     ],
     "directory": "/home/memorydump/programming/sdl_test/ltnc_btl",
     "file": "/home/memorydump/programming/sdl_test/ltnc_btl/src/main.cpp",
+    "output": "/home/memorydump/programming/sdl_test/ltnc_btl/game"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-c",
+      "-g",
+      "-I",
+      "hdr",
+      "-Wall",
+      "-Wextra",
+      "--pedantic",
+      "-Wsign-conversion",
+      "-o",
+      "game",
+      "src/player.cpp"
+    ],
+    "directory": "/home/memorydump/programming/sdl_test/ltnc_btl",
+    "file": "/home/memorydump/programming/sdl_test/ltnc_btl/src/player.cpp",
+    "output": "/home/memorydump/programming/sdl_test/ltnc_btl/game"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-c",
+      "-g",
+      "-I",
+      "hdr",
+      "-Wall",
+      "-Wextra",
+      "--pedantic",
+      "-Wsign-conversion",
+      "-o",
+      "game",
+      "src/vector2d.cpp"
+    ],
+    "directory": "/home/memorydump/programming/sdl_test/ltnc_btl",
+    "file": "/home/memorydump/programming/sdl_test/ltnc_btl/src/vector2d.cpp",
     "output": "/home/memorydump/programming/sdl_test/ltnc_btl/game"
   }
 ]

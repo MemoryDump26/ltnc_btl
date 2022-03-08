@@ -2,7 +2,7 @@
 #include "globals.h"
 #include "graphics.h"
 #include "inputs.h"
-#include <iostream>
+#include "player.h"
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 
@@ -19,25 +19,23 @@ Game::~Game() {
 void Game::gameLoop() {
     Graphics graphics;
     Inputs inputs;
-    int x = 0;
-    int y = 0;
+    Player player(&graphics);
     bool quit = false;
-    SDL_Rect source = {0, 0, 250, 500};
+    /*SDL_Rect source = {0, 0, 250, 500};
     SDL_Rect destination = {x, y, 25, 50};
-    SDL_Texture* player = graphics.loadTexture(globals::PLAYER_SPRITE);
+    SDL_Texture* player = graphics.loadTexture(globals::PLAYER_SPRITE);*/
 
     while (!quit) {
         SDL_RenderClear(graphics.getRenderer());
-        SDL_RenderCopy(graphics.getRenderer(), player, &source, &destination);
+        //SDL_RenderCopy(graphics.getRenderer(), player, &source, &destination);
 
         inputs.getInputs();
 
-        if (inputs.isKeyHeld(SDLK_w)) y -= 5;
-        if (inputs.isKeyHeld(SDLK_s)) y += 5;
-        if (inputs.isKeyHeld(SDLK_a)) x -= 5;
-        if (inputs.isKeyHeld(SDLK_d)) x += 5;
+        if (inputs.isKeyHeld(SDLK_a)) player.moveLeft();
+        else if (inputs.isKeyHeld(SDLK_d)) player.moveRight();
+        else player.decelerate();
 
-        destination = {x, y, 25, 50};
+        player.update();
 
         quit = inputs.quitting();
 
@@ -52,7 +50,7 @@ void Game::gameLoop() {
             else if (event.key.keysym.sym == SDLK_d) x += 3;
         }*/
 
-        graphics.draw();
+        graphics.present();
         SDL_Delay(16);
     }
 
