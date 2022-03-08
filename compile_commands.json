@@ -47,6 +47,24 @@
       "-Wsign-conversion",
       "-o",
       "game",
+      "src/inputs.cpp"
+    ],
+    "directory": "/home/memorydump/programming/sdl_test/ltnc_btl",
+    "file": "/home/memorydump/programming/sdl_test/ltnc_btl/src/inputs.cpp",
+    "output": "/home/memorydump/programming/sdl_test/ltnc_btl/game"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-c",
+      "-I",
+      "hdr",
+      "-Wall",
+      "-Wextra",
+      "--pedantic",
+      "-Wsign-conversion",
+      "-o",
+      "game",
       "src/main.cpp"
     ],
     "directory": "/home/memorydump/programming/sdl_test/ltnc_btl",
