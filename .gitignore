@@ -1,6 +1,9 @@
 # Clangd cache
 .cache
 
+# Main game
+game
+
 # Prerequisites
 *.d
 
