@@ -13,6 +13,10 @@ LINKER_FLAGS = -lSDL2 -lSDL2_image
 game: $(obj)
 	$(CC) $(DEBUG) $(HEADERS_DIR) -o $@ $^ $(LINKER_FLAGS) $(COMPILER_FLAGS)
 
+.PHONY: run
+run:
+	./game
+
 .PHONY: clean
 clean:
 	rm game
