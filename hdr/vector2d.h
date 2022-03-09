@@ -1,14 +1,26 @@
 #ifndef VECTOR2D_H
 #define VECTOR2D_H
 
-class vector2d {
+class Vector2 {
 public:
-    vector2d();
-    vector2d(int _x, int _y);
-    ~vector2d();
-    friend vector2d operator+(const vector2d v1, const vector2d v2);
-    int x = 0;
-    int y = 0;
+    Vector2();
+    Vector2(double _x, double _y);
+    ~Vector2();
+
+    friend Vector2 operator+(const Vector2& v1, const Vector2& v2);
+    Vector2& operator+=(const Vector2& rhs);
+
+    friend Vector2 operator-(const Vector2& v1, const Vector2& v2);
+    Vector2& operator-=(const Vector2& rhs);
+
+    friend Vector2 operator*(const Vector2& v1, const double& v2);
+    Vector2& operator*=(const double& rhs);
+
+    friend Vector2 operator/(const Vector2& v1, const double& v2);
+    Vector2& operator/=(const double& rhs);
+
+    double x;
+    double y;
 
 private:
 };

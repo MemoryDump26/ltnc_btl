@@ -19,13 +19,15 @@ public:
     void decelerate();
 private:
     bool onGround;
+    bool moving;
     Graphics* graphics;
     SDL_Texture* sprite;
     SDL_Rect* spriteRect;
     SDL_Rect* position;
-    vector2d friction;
-    vector2d velocity;
-    vector2d acceleration;
+    Vector2 friction;
+    Vector2 gravity;
+    Vector2 velocity;
+    Vector2 acceleration;
 };
 
 #endif
