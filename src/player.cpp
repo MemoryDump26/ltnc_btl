@@ -6,16 +6,14 @@
 #include <SDL2/SDL.h>
 #include <iostream>
 #include <iomanip>
-#include <algorithm>
-#include <cmath>
 
 namespace {
     const char PLAYER_SPRITE[] = "assets/sprites/character.png";
-    const double GRAVITY_CONST = 2;
-    const double TERMINAL_VELOCITY = 10;
+    const double GRAVITY_CONST = 3;
     const double ACCELERATION_CONST = 3;
-    const double FRICTION_CONST = (ACCELERATION_CONST / TERMINAL_VELOCITY);
-    const double JUMP_FORCE = -8;
+    const double X_FRICTION_CONST = 0.25;
+    const double Y_FRICTION_CONST = 0.1;
+    const double JUMP_FORCE = -50;
 }
 
 enum Direction {
@@ -36,26 +34,33 @@ Player::~Player() {
 }
 
 void Player::update() {
-    // Check if standing
-    if (position->y == globals::GAME_HEIGHT - 50) onGround = true;
-    else onGround = false;
 
-    if (onGround) velocity.y = 0;
+    // Calculating velocity
+    friction.x = -velocity.x * X_FRICTION_CONST;
+    friction.y = -velocity.y * Y_FRICTION_CONST;
+    velocity += acceleration + friction;
 
-    // Apply gravity
-    if (!onGround) acceleration.y += GRAVITY_CONST;
-
-    // Apply friction
-    friction.x = -velocity.x * FRICTION_CONST;
-    acceleration = acceleration + friction;
-    velocity += acceleration;
-    //velocity.x = clamp(velocity.x, -TERMINAL_VELOCITY, TERMINAL_VELOCITY);
-    velocity.y = std::min(velocity.y, TERMINAL_VELOCITY);
-
+    // Move the player
     position->x = clamp(round(position->x + velocity.x), 0.0, globals::GAME_WIDTH - 25.0);
     position->y = clamp((position->y + velocity.y), 0.0, globals::GAME_HEIGHT - 50.0);
 
+    // Check if the player is on the ground
+    // to apply/clear gravity
+    if (position->y == globals::GAME_HEIGHT - 50) onGround = true;
+    else onGround = false;
+
+    if (onGround) {
+        velocity.y = 0;
+        acceleration.y = 0;
+    }
+    else{
+        acceleration.y = GRAVITY_CONST;
+    }
+
+    // Render the player
     SDL_RenderCopy(graphics->getRenderer(), sprite, spriteRect, position);
+
+    // Debug
     std::cout << "Velocity ";
     std::cout << std::fixed << std::setprecision(6)<< velocity.x << ' ' << velocity.y;
     std::cout << std::endl;
@@ -64,7 +69,6 @@ void Player::update() {
     std::cout << std::endl;
     std::cout << "Grounded " << std::boolalpha << onGround;
     std::cout << std::endl;
-    //std::cout << std::fixed << std::setprecision(6)<< position->x << ' ' << position->y;
 }
 
 void Player::moveLeft() {
@@ -83,7 +87,5 @@ void Player::jump() {
 
 void Player::decelerate() {
     acceleration.x = 0;
-    //velocity.x = velocity.x / 3;
-    //velocity.x = 0;
 }
 
