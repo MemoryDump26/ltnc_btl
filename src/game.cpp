@@ -32,10 +32,14 @@ void Game::gameLoop() {
         else player.decelerate();
         if (inputs.isKeyPressed(SDLK_SPACE)) player.jump();
 
+        if (inputs.isLeftClick()) player.fire();
+
         player.update();
+        player.draw();
 
         quit = inputs.quitting();
 
+        SDL_SetRenderDrawColor(graphics.getRenderer(), 255, 255, 255, SDL_ALPHA_OPAQUE);
         graphics.present();
         SDL_Delay(16);
     }

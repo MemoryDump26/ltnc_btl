@@ -1,4 +1,5 @@
 #include "player.h"
+#include "weapon.h"
 #include "graphics.h"
 #include "globals.h"
 #include "vector2d.h"
@@ -28,6 +29,7 @@ Player::Player(Graphics* _graphics) {
     position = new SDL_Rect {0, 0, 25, 50};
     graphics = _graphics;
     sprite = graphics->loadTexture(PLAYER_SPRITE);
+    weapon = new Weapon {graphics};
 }
 
 Player::~Player() {
@@ -44,6 +46,9 @@ void Player::update() {
     position->x = clamp(round(position->x + velocity.x), 0.0, globals::GAME_WIDTH - 25.0);
     position->y = clamp((position->y + velocity.y), 0.0, globals::GAME_HEIGHT - 50.0);
 
+    // Move the weapon
+    weapon->update(position->x + 12, position->y + 25);
+
     // Check if the player is on the ground
     // to apply/clear gravity
     if (position->y == globals::GAME_HEIGHT - 50) onGround = true;
@@ -57,10 +62,9 @@ void Player::update() {
         acceleration.y = GRAVITY_CONST;
     }
 
-    // Render the player
-    SDL_RenderCopy(graphics->getRenderer(), sprite, spriteRect, position);
 
     // Debug
+    /*
     std::cout << "Velocity ";
     std::cout << std::fixed << std::setprecision(6)<< velocity.x << ' ' << velocity.y;
     std::cout << std::endl;
@@ -69,6 +73,12 @@ void Player::update() {
     std::cout << std::endl;
     std::cout << "Grounded " << std::boolalpha << onGround;
     std::cout << std::endl;
+    */
+}
+
+void Player::draw() {
+    SDL_RenderCopy(graphics->getRenderer(), sprite, spriteRect, position);
+    weapon->draw();
 }
 
 void Player::moveLeft() {
@@ -83,6 +93,10 @@ void Player::jump() {
     if (onGround) {
         acceleration.y = JUMP_FORCE;
     }
+}
+
+void Player::fire() {
+    weapon->fire();
 }
 
 void Player::decelerate() {
