@@ -18,3 +18,5 @@ Chuyển thành:
 ```
 ### Game:
 Sử dụng WASD để di chuyển ô vuông.
+Space để nhảy.
+Chuột trái để bắn.
