@@ -21,7 +21,7 @@ private:
     SDL_Rect* spriteRect;
     SDL_Rect* position;
     SDL_Texture* sprite;
-    Vector2 angle;
+    Vector2<double> angle;
     int cooldown = 0;
 };
 

@@ -27,10 +27,10 @@ private:
     SDL_Texture* sprite;
     SDL_Rect* spriteRect;
     SDL_Rect* position;
-    Vector2 friction;
-    Vector2 gravity;
-    Vector2 velocity;
-    Vector2 acceleration;
+    Vector2<double> friction;
+    Vector2<double> gravity;
+    Vector2<double> velocity;
+    Vector2<double> acceleration;
     Weapon* weapon;
 };
 
