@@ -1,5 +1,6 @@
 #include "graphics.h"
 #include "globals.h"
+#include "vector2d.h"
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 
@@ -24,6 +25,10 @@ SDL_Texture* Graphics::loadTexture(const char path[]) {
     SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, surface);
     SDL_FreeSurface(surface);
     return texture;
+}
+
+void Graphics::draw(SDL_Texture* texture, SDL_Rect* src, SDL_Rect* dest)  {
+    SDL_RenderCopy(renderer, texture, src, dest);
 }
 
 void Graphics::present() {

@@ -4,12 +4,17 @@
 #include "globals.h"
 #include "vector2d.h"
 #include "utils.h"
+#include "sprite.h"
 #include <SDL2/SDL.h>
 #include <iostream>
 #include <iomanip>
 
 namespace {
     const char PLAYER_SPRITE[] = "assets/sprites/character.png";
+    const int SPRITE_WIDTH = 250;
+    const int SPRITE_HEIGHT = 500;
+    const double SPRITE_SCALE = 0.5;
+    const int TICK_PER_FRAME = 3;
     const double GRAVITY_CONST = 3;
     const double ACCELERATION_CONST = 3;
     const double X_FRICTION_CONST = 0.25;
@@ -25,11 +30,10 @@ enum Direction {
 };
 
 Player::Player(Graphics* _graphics) {
-    spriteRect = new SDL_Rect {0, 0, 250, 500};
-    position = new SDL_Rect {0, 0, 25, 50};
     graphics = _graphics;
-    sprite = graphics->loadTexture(PLAYER_SPRITE);
     weapon = new Weapon {graphics};
+    sprite = new Sprite {graphics, PLAYER_SPRITE, SPRITE_WIDTH, SPRITE_HEIGHT, SPRITE_SCALE, TICK_PER_FRAME};
+    sprite->addAnimation("run", 0, 9);
 }
 
 Player::~Player() {
@@ -43,15 +47,20 @@ void Player::update() {
     velocity += acceleration + friction;
 
     // Move the player
-    position->x = clamp(round(position->x + velocity.x), 0.0, globals::GAME_WIDTH - 25.0);
-    position->y = clamp((position->y + velocity.y), 0.0, globals::GAME_HEIGHT - 50.0);
+    // round() because the character still move 1 pixel left
+    // even if velocity is like -0.000069 or something :/
+    position.x = clamp(round(position.x + velocity.x), 0.0, globals::GAME_WIDTH - SPRITE_WIDTH * SPRITE_SCALE);
+    position.y = clamp((position.y + velocity.y), 0.0, globals::GAME_HEIGHT - SPRITE_HEIGHT * SPRITE_SCALE);
 
     // Move the weapon
-    weapon->update(position->x + 12, position->y + 25);
+    Vector2<int> center;
+    center.x = position.x + SPRITE_WIDTH * SPRITE_SCALE / 2;
+    center.y = position.y + SPRITE_HEIGHT * SPRITE_SCALE / 2;
+    weapon->update(center);
 
     // Check if the player is on the ground
     // to apply/clear gravity
-    if (position->y == globals::GAME_HEIGHT - 50) onGround = true;
+    if (position.y == globals::GAME_HEIGHT - SPRITE_HEIGHT * SPRITE_SCALE) onGround = true;
     else onGround = false;
 
     if (onGround) {
@@ -77,7 +86,7 @@ void Player::update() {
 }
 
 void Player::draw() {
-    SDL_RenderCopy(graphics->getRenderer(), sprite, spriteRect, position);
+    sprite->play("run", position);
     weapon->draw();
 }
 

@@ -3,11 +3,9 @@
 
 #include "vector2d.h"
 
-class SDL_Texture;
-class SDL_Rect;
+class Sprite;
 class Graphics;
 class Weapon;
-
 
 class Player {
 public:
@@ -24,14 +22,13 @@ private:
     bool onGround;
     bool moving;
     Graphics* graphics;
-    SDL_Texture* sprite;
-    SDL_Rect* spriteRect;
-    SDL_Rect* position;
     Vector2<double> friction;
     Vector2<double> gravity;
     Vector2<double> velocity;
     Vector2<double> acceleration;
+    Vector2<int> position;
     Weapon* weapon;
+    Sprite* sprite;
 };
 
 #endif

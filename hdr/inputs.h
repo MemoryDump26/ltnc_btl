@@ -4,6 +4,7 @@
 #include <map>
 #include <SDL2/SDL.h>
 
+
 class Inputs {
 public:
     Inputs();

@@ -4,25 +4,23 @@
 #include "vector2d.h"
 
 class Graphics;
-class SDL_Rect;
-class SDL_Texture;
-class SDL_Cursor;
+class Sprite;
 
 class Weapon {
 
 public:
     Weapon(Graphics* _graphics);
     ~Weapon();
-    void update(const int playerX, const int playerY);
+    void update(const Vector2<int> player);
     void fire();
     void draw();
 private:
     Graphics* graphics;
-    SDL_Rect* spriteRect;
-    SDL_Rect* position;
-    SDL_Texture* sprite;
-    Vector2<double> angle;
+    Vector2<int> angle;
+    Vector2<int> cursor;
+    Vector2<int> position;
     int cooldown = 0;
+    Sprite* sprite;
 };
 
 #endif
