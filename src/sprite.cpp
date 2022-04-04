@@ -32,12 +32,7 @@ void Sprite::addAnimation(std::string animation, size_t start, size_t end) {
 void Sprite::play(std::string animation, const Vector2<int>& position) {
 
     SDL_Rect destination = {position.x, position.y, scaledW, scaledH};
-    /*SDL_RenderCopy(
-            graphics->getRenderer(),
-            spritesheet,
-            &animations[animation][frameIndex],
-            &destination
-        );*/
+
     graphics->draw(spritesheet, &animations[animation][frameIndex], &destination);
 
     if (cooldown == 0) {

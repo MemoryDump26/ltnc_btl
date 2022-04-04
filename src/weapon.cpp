@@ -10,7 +10,7 @@ namespace {
     const int SPRITE_HEIGHT = 200;
     const double SPRITE_SCALE = 0.5;
     const int WEAPON_DISTANCE = 200;
-    const int PROJECTILE_VELOCITY = 2;
+    const int PROJECTILE_VELOCITY = 5;
 }
 
 Weapon::Weapon(Graphics* _graphics) {
@@ -37,18 +37,20 @@ void Weapon::update(const Vector2<int> player) {
         position = player + angle;
         position -= {50, 50};
 
+        center.x = position.x + SPRITE_WIDTH * SPRITE_SCALE / 2;
+        center.y = position.y + SPRITE_HEIGHT * SPRITE_SCALE / 2;
+
         SDL_SetRenderDrawColor(graphics->getRenderer(), 0, 0, 0, SDL_ALPHA_OPAQUE);
-        SDL_RenderDrawLine(graphics->getRenderer(), player.x, player.y, position.x + 50, position.y + 50);
+        graphics->drawLine(player, center);
     }
     else {
 
-        /*position->x += angle.x / PROJECTILE_VELOCITY;
-        position->y += angle.y / PROJECTILE_VELOCITY;*/
         position += angle / PROJECTILE_VELOCITY;
+        center.x = position.x + SPRITE_WIDTH * SPRITE_SCALE / 2;
+        center.y = position.y + SPRITE_HEIGHT * SPRITE_SCALE / 2;
 
         SDL_SetRenderDrawColor(graphics->getRenderer(), 0, 0, 0, SDL_ALPHA_OPAQUE);
-        SDL_RenderDrawLine(graphics->getRenderer(), player.x, player.y, position.x + 100, position.y + 100);
-        //SDL_RenderDrawLine(graphics->getRenderer(), playerX, playerY, position->x + 20, position->y + 20);
+        graphics->drawLine(player, center);
         cooldown--;
     }
 }

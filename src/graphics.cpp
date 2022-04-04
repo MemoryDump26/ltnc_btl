@@ -31,6 +31,10 @@ void Graphics::draw(SDL_Texture* texture, SDL_Rect* src, SDL_Rect* dest)  {
     SDL_RenderCopy(renderer, texture, src, dest);
 }
 
+void Graphics::drawLine(const Vector2<int> src, const Vector2<int> dest) {
+    SDL_RenderDrawLine(renderer, src.x, src.y, dest.x, dest.y);
+}
+
 void Graphics::present() {
     SDL_RenderPresent(renderer);
 }
