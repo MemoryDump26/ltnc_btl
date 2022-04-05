@@ -2,12 +2,9 @@
 #include "weapon.h"
 #include "graphics.h"
 #include "globals.h"
-#include "vector2d.h"
 #include "utils.h"
 #include "sprite.h"
 #include <SDL2/SDL.h>
-#include <iostream>
-#include <iomanip>
 
 namespace {
     const char PLAYER_SPRITE[] = "assets/sprites/character.png";
@@ -41,7 +38,6 @@ Player::~Player() {
 
 void Player::update() {
 
-    // Calculating velocity
     friction.x = -velocity.x * X_FRICTION_CONST;
     friction.y = -velocity.y * Y_FRICTION_CONST;
     velocity += acceleration + friction;
@@ -52,14 +48,10 @@ void Player::update() {
     position.x = clamp(round(position.x + velocity.x), 0.0, globals::GAME_WIDTH - SPRITE_WIDTH * SPRITE_SCALE);
     position.y = clamp((position.y + velocity.y), 0.0, globals::GAME_HEIGHT - SPRITE_HEIGHT * SPRITE_SCALE);
 
-    // Move the weapon
-    Vector2<int> center;
     center.x = position.x + SPRITE_WIDTH * SPRITE_SCALE / 2;
     center.y = position.y + SPRITE_HEIGHT * SPRITE_SCALE / 2;
     weapon->update(center);
 
-    // Check if the player is on the ground
-    // to apply/clear gravity
     if (position.y == globals::GAME_HEIGHT - SPRITE_HEIGHT * SPRITE_SCALE) onGround = true;
     else onGround = false;
 
@@ -71,18 +63,6 @@ void Player::update() {
         acceleration.y = GRAVITY_CONST;
     }
 
-
-    // Debug
-    /*
-    std::cout << "Velocity ";
-    std::cout << std::fixed << std::setprecision(6)<< velocity.x << ' ' << velocity.y;
-    std::cout << std::endl;
-    std::cout << "Accel ";
-    std::cout << std::fixed << std::setprecision(6)<< acceleration.x << ' ' << acceleration.y;
-    std::cout << std::endl;
-    std::cout << "Grounded " << std::boolalpha << onGround;
-    std::cout << std::endl;
-    */
 }
 
 void Player::draw() {

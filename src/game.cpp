@@ -7,7 +7,6 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
-#include <string>
 
 Game::Game() {
     SDL_Init(SDL_INIT_EVERYTHING);
@@ -25,8 +24,8 @@ void Game::gameLoop() {
     Graphics graphics;
     Inputs inputs;
     Player player(&graphics);
-    SDL_Color color = {0, 0, 0};
-    TextBox text(&graphics, "assets/fonts/iosevka-regular.ttc", 15);
+    SDL_Color color = {0, 0, 0, 255};
+    TextBox text(&graphics, "assets/fonts/iosevka-regular.ttc", 20);
     bool quit = false;
 
     while (!quit) {
@@ -52,8 +51,9 @@ void Game::gameLoop() {
         Uint64 endTick = SDL_GetTicks64();
         Uint64 elapsedTime = endTick - startTick;
 
-        std::string s = std::to_string(elapsedTime);
-        text.update(s.c_str(), &color);
+        char* elapsedText = new char[10];
+        std::sprintf(elapsedText, "%lu", elapsedTime);
+        text.update(elapsedText, &color);
         text.draw();
         graphics.present();
         SDL_Delay((1000 / globals::GAME_FPS) - elapsedTime);

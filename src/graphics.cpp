@@ -1,6 +1,5 @@
 #include "graphics.h"
 #include "globals.h"
-#include "vector2d.h"
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 

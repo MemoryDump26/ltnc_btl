@@ -27,6 +27,7 @@ private:
     Vector2<double> velocity;
     Vector2<double> acceleration;
     Vector2<int> position;
+    Vector2<int> center;
     Weapon* weapon;
     Sprite* sprite;
 };

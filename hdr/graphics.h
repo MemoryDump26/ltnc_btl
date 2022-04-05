@@ -2,8 +2,6 @@
 #define GRAPHICS_H
 
 #include "vector2d.h"
-#include <map>
-#include <string>
 #include <SDL2/SDL_ttf.h>
 
 struct SDL_Window;
