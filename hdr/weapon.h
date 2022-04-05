@@ -5,6 +5,7 @@
 
 class Graphics;
 class Sprite;
+class SDL_Rect;
 
 class Weapon {
 
@@ -14,6 +15,7 @@ public:
     void update(const Vector2<int> player);
     void fire();
     void draw();
+    SDL_Rect* hitbox;
 private:
     Graphics* graphics;
     Vector2<int> angle;

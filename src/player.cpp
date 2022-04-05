@@ -17,6 +17,7 @@ namespace {
     const double X_FRICTION_CONST = 0.25;
     const double Y_FRICTION_CONST = 0.1;
     const double JUMP_FORCE = -50;
+    const int MAX_HEALTH = 100;
 }
 
 enum Direction {
@@ -31,6 +32,8 @@ Player::Player(Graphics* _graphics) {
     weapon = new Weapon {graphics};
     sprite = new Sprite {graphics, PLAYER_SPRITE, SPRITE_WIDTH, SPRITE_HEIGHT, SPRITE_SCALE, TICK_PER_FRAME};
     sprite->addAnimation("run", 0, 9);
+    health = MAX_HEALTH;
+    hitbox = new SDL_Rect {0, 0, 125, 250};
 }
 
 Player::~Player() {
@@ -42,11 +45,11 @@ void Player::update() {
     friction.y = -velocity.y * Y_FRICTION_CONST;
     velocity += acceleration + friction;
 
-    // Move the player
-    // round() because the character still move 1 pixel left
-    // even if velocity is like -0.000069 or something :/
     position.x = clamp(round(position.x + velocity.x), 0.0, globals::GAME_WIDTH - SPRITE_WIDTH * SPRITE_SCALE);
     position.y = clamp((position.y + velocity.y), 0.0, globals::GAME_HEIGHT - SPRITE_HEIGHT * SPRITE_SCALE);
+
+    hitbox->x = position.x;
+    hitbox->y = position.y;
 
     center.x = position.x + SPRITE_WIDTH * SPRITE_SCALE / 2;
     center.y = position.y + SPRITE_HEIGHT * SPRITE_SCALE / 2;
@@ -63,6 +66,7 @@ void Player::update() {
         acceleration.y = GRAVITY_CONST;
     }
 
+    if (iframe) iframe--;
 }
 
 void Player::draw() {
@@ -90,5 +94,16 @@ void Player::fire() {
 
 void Player::decelerate() {
     acceleration.x = 0;
+}
+
+void Player::hit(int damage) {
+    if (!iframe) {
+        health -= damage;
+        iframe = 20;
+    }
+}
+
+int Player::getHealth() {
+    return health;
 }
 
