@@ -2,18 +2,17 @@
 #define PLAYER_H
 
 #include "vector2d.h"
+#include "sprite.h"
 
-class Sprite;
 class Graphics;
 class Weapon;
 class SDL_Rect;
 
-class Player {
+class Player : public Sprite{
 public:
     Player(Graphics* _graphics);
     ~Player();
     void update();
-    void draw();
     void moveLeft();
     void moveRight();
     void jump();
@@ -27,15 +26,11 @@ private:
     bool onGround;
     bool moving;
     int iframe;
-    Graphics* graphics;
     Vector2<double> friction;
     Vector2<double> gravity;
     Vector2<double> velocity;
     Vector2<double> acceleration;
-    Vector2<int> position;
     Vector2<int> center;
-    Weapon* weapon;
-    Sprite* sprite;
 };
 
 #endif

@@ -11,7 +11,7 @@ namespace {
     const int SPRITE_WIDTH = 250;
     const int SPRITE_HEIGHT = 500;
     const double SPRITE_SCALE = 0.5;
-    const int TICK_PER_FRAME = 3;
+    const int SPRITE_SPEED = 3;
     const double GRAVITY_CONST = 3;
     const double ACCELERATION_CONST = 3;
     const double X_FRICTION_CONST = 0.25;
@@ -27,11 +27,10 @@ enum Direction {
     RIGHT,
 };
 
-Player::Player(Graphics* _graphics) {
-    graphics = _graphics;
-    weapon = new Weapon {graphics};
-    sprite = new Sprite {graphics, PLAYER_SPRITE, SPRITE_WIDTH, SPRITE_HEIGHT, SPRITE_SCALE, TICK_PER_FRAME};
-    sprite->addAnimation("run", 0, 9);
+Player::Player(Graphics* _graphics) :
+    Sprite(_graphics, PLAYER_SPRITE, SPRITE_WIDTH, SPRITE_HEIGHT, SPRITE_SCALE, SPRITE_SPEED)
+{
+    addAnimation("run", 0, 9);
     health = MAX_HEALTH;
     hitbox = new SDL_Rect {0, 0, 125, 250};
 }
@@ -53,7 +52,6 @@ void Player::update() {
 
     center.x = position.x + SPRITE_WIDTH * SPRITE_SCALE / 2;
     center.y = position.y + SPRITE_HEIGHT * SPRITE_SCALE / 2;
-    weapon->update(center);
 
     if (position.y == globals::GAME_HEIGHT - SPRITE_HEIGHT * SPRITE_SCALE) onGround = true;
     else onGround = false;
@@ -67,11 +65,6 @@ void Player::update() {
     }
 
     if (iframe) iframe--;
-}
-
-void Player::draw() {
-    sprite->play("run", position);
-    weapon->draw();
 }
 
 void Player::moveLeft() {

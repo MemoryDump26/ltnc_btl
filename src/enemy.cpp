@@ -12,10 +12,10 @@ namespace {
     const int TICK_PER_FRAME = 3;
 }
 
-Enemy::Enemy(Graphics* _graphics) {
-    graphics = _graphics;
-    sprite = new Sprite {graphics, ENEMY_SPRITE, SPRITE_WIDTH, SPRITE_HEIGHT, SPRITE_SCALE, TICK_PER_FRAME};
-    sprite->addAnimation("idle", 0, 9);
+Enemy::Enemy(Graphics* _graphics) :
+    Sprite(_graphics, ENEMY_SPRITE, SPRITE_WIDTH, SPRITE_HEIGHT, SPRITE_SCALE, TICK_PER_FRAME)
+{
+    addAnimation("idle", 0, 9);
     hitbox = new SDL_Rect {0, 0, 100, 100};
 }
 
@@ -33,8 +33,4 @@ void Enemy::update() {
 
     hitbox->x = position.x;
     hitbox->y = position.y;
-}
-
-void Enemy::draw() {
-    sprite->play("idle", position);
 }

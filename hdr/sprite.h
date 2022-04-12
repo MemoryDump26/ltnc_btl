@@ -15,12 +15,15 @@ public:
     Sprite();
     Sprite(Graphics* _graphics, const char path[], int _frameW, int _frameH, double scaler, int _speed);
     ~Sprite();
-    void addAnimation(std::string animation, size_t start, size_t end);
-    void play(std::string animation, const Vector2<int>& position);
+    void addAnimation(std::string name, size_t start, size_t end);
+    void setAnimation(std::string name);
+    void draw();
 
-private:
+protected:
     Vector2<int> position;
     Graphics* graphics;
+
+private:
     int frameW;
     int frameH;
     int scaledW;
@@ -29,6 +32,7 @@ private:
     int speed;
     size_t frameIndex;
     SDL_Texture* spritesheet;
+    std::string currAnimation;
     std::map<std::string, std::vector<SDL_Rect>> animations;
     std::map<std::string, size_t> numOfFrame;
 };

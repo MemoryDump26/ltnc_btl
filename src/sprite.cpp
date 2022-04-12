@@ -7,15 +7,16 @@ Sprite::Sprite() {
 
 }
 
-Sprite::Sprite(Graphics* _graphics, const char path[], int _frameW, int _frameH, double scaler, int _speed) {
-    graphics = _graphics;
+Sprite::Sprite(Graphics* _graphics, const char path[], int _frameW, int _frameH, double scaler, int _speed) :
+    graphics {_graphics},
+    frameW  {_frameW},
+    frameH {_frameH},
+    speed {_speed}
+{
     spritesheet = graphics->loadTexture(path);
-    frameH = _frameH;
-    frameW = _frameW;
     scaledW = frameW * scaler;
     scaledH = frameH * scaler;
     frameIndex = 0;
-    speed = _speed;
     cooldown = speed;
 }
 
@@ -27,16 +28,21 @@ void Sprite::addAnimation(std::string animation, size_t start, size_t end) {
         SDL_Rect frame = {frameW * col, frameH * row, frameW, frameH};
         animations[animation].push_back(frame);
     }
+    if (currAnimation == "") currAnimation = animation;
 }
 
-void Sprite::play(std::string animation, const Vector2<int>& position) {
+void Sprite::setAnimation(std::string name) {
+    currAnimation = name;
+}
+
+void Sprite::draw() {
 
     SDL_Rect destination = {position.x, position.y, scaledW, scaledH};
 
-    graphics->draw(spritesheet, &animations[animation][frameIndex], &destination);
+    graphics->draw(spritesheet, &animations[currAnimation][frameIndex], &destination);
 
     if (cooldown == 0) {
-        frameIndex = (frameIndex + 1) % numOfFrame[animation];
+        frameIndex = (frameIndex + 1) % numOfFrame[currAnimation];
         cooldown = speed;
     }
     else cooldown--;
