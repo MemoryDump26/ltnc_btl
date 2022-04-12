@@ -81,10 +81,6 @@ void Player::jump() {
     }
 }
 
-void Player::fire() {
-    weapon->fire();
-}
-
 void Player::decelerate() {
     acceleration.x = 0;
 }

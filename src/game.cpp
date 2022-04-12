@@ -43,7 +43,7 @@ void Game::gameLoop() {
         else player.decelerate();
         if (inputs.isKeyPressed(SDLK_SPACE)) player.jump();
 
-        if (inputs.isLeftClick()) player.fire();
+        //if (inputs.isLeftClick()) player.fire();
 
         player.update();
         player.draw();
