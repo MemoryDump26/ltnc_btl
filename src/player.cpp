@@ -5,6 +5,7 @@
 #include "utils.h"
 #include "sprite.h"
 #include <SDL2/SDL.h>
+#include <iostream>
 
 namespace {
     const char PLAYER_SPRITE[] = "assets/sprites/character.png";
@@ -33,6 +34,7 @@ Player::Player(Graphics* _graphics) :
     addAnimation("run", 0, 9);
     health = MAX_HEALTH;
     hitbox = new SDL_Rect {0, 0, 125, 250};
+    iframe = 0;
 }
 
 Player::~Player() {
@@ -65,6 +67,7 @@ void Player::update() {
     }
 
     if (iframe) iframe--;
+    std::cout << iframe << '\n';
 }
 
 void Player::moveLeft() {
