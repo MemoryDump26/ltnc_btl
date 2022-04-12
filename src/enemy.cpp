@@ -9,13 +9,12 @@ namespace {
     const int SPRITE_WIDTH = 200;
     const int SPRITE_HEIGHT = 200;
     const double SPRITE_SCALE = 0.5;
-    const int TICK_PER_FRAME = 3;
 }
 
 Enemy::Enemy(Graphics* _graphics) :
-    Sprite(_graphics, ENEMY_SPRITE, SPRITE_WIDTH, SPRITE_HEIGHT, SPRITE_SCALE, TICK_PER_FRAME)
+    Sprite(_graphics, ENEMY_SPRITE, SPRITE_WIDTH, SPRITE_HEIGHT, SPRITE_SCALE)
 {
-    addAnimation("idle", 0, 9);
+    addAnimation("idle", 0, 9, 5);
     hitbox = new SDL_Rect {0, 0, 100, 100};
 }
 

@@ -9,15 +9,14 @@ namespace {
     const int SPRITE_WIDTH = 200;
     const int SPRITE_HEIGHT = 200;
     const double SPRITE_SCALE = 0.5;
-    const int SPRITE_SPEED = 1;
     const int WEAPON_DISTANCE = 200;
     const int PROJECTILE_VELOCITY = 5;
 }
 
 Weapon::Weapon(Graphics* _graphics) :
-    Sprite(_graphics, WEAPON_SPRITE, SPRITE_WIDTH, SPRITE_HEIGHT, SPRITE_SCALE, SPRITE_SPEED)
+    Sprite(_graphics, WEAPON_SPRITE, SPRITE_WIDTH, SPRITE_HEIGHT, SPRITE_SCALE)
 {
-    addAnimation("idle", 0, 0);
+    addAnimation("idle", 0, 0, 1);
 }
 
 Weapon::~Weapon() {

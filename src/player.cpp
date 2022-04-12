@@ -1,4 +1,5 @@
 #include "player.h"
+#include "vector2d.h"
 #include "weapon.h"
 #include "graphics.h"
 #include "globals.h"
@@ -12,7 +13,6 @@ namespace {
     const int SPRITE_WIDTH = 250;
     const int SPRITE_HEIGHT = 500;
     const double SPRITE_SCALE = 0.5;
-    const int SPRITE_SPEED = 3;
     const double GRAVITY_CONST = 3;
     const double ACCELERATION_CONST = 3;
     const double X_FRICTION_CONST = 0.25;
@@ -29,9 +29,10 @@ enum Direction {
 };
 
 Player::Player(Graphics* _graphics) :
-    Sprite(_graphics, PLAYER_SPRITE, SPRITE_WIDTH, SPRITE_HEIGHT, SPRITE_SCALE, SPRITE_SPEED)
+    Sprite(_graphics, PLAYER_SPRITE, SPRITE_WIDTH, SPRITE_HEIGHT, SPRITE_SCALE)
 {
-    addAnimation("run", 0, 9);
+    addAnimation("idle", 0, 1, 10);
+    addAnimation("run", 0, 9, 5);
     health = MAX_HEALTH;
     hitbox = new SDL_Rect {0, 0, 125, 250};
     iframe = 0;
@@ -67,7 +68,6 @@ void Player::update() {
     }
 
     if (iframe) iframe--;
-    std::cout << iframe << '\n';
 }
 
 void Player::moveLeft() {
@@ -78,14 +78,14 @@ void Player::moveRight() {
         acceleration.x = ACCELERATION_CONST;
 }
 
+void Player::decelerate() {
+    acceleration.x = 0;
+}
+
 void Player::jump() {
     if (onGround) {
         acceleration.y = JUMP_FORCE;
     }
-}
-
-void Player::decelerate() {
-    acceleration.x = 0;
 }
 
 void Player::hit(int damage) {
@@ -99,3 +99,6 @@ int Player::getHealth() {
     return health;
 }
 
+Vector2<int> Player::getCenter() {
+    return center;
+}

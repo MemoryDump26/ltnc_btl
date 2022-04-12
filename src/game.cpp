@@ -3,6 +3,7 @@
 #include "graphics.h"
 #include "inputs.h"
 #include "player.h"
+#include "weapon.h"
 #include "textbox.h"
 #include "enemy.h"
 #include <SDL2/SDL.h>
@@ -28,26 +29,45 @@ void Game::gameLoop() {
     Graphics graphics;
     Inputs inputs;
     Player player(&graphics);
-    SDL_Color color = {0, 0, 0, 255};
+    Weapon weapon(&graphics);
     TextBox text(&graphics, "assets/fonts/iosevka-regular.ttc", 20);
-    bool quit = false;
     Enemy test(&graphics);
+    SDL_Color color = {0, 0, 0, 255};
 
+    bool quit = false;
     while (!quit) {
         Uint64 startTick = SDL_GetTicks64();
         SDL_RenderClear(graphics.getRenderer());
 
         inputs.getInputs();
 
-        if (inputs.isKeyHeld(SDLK_d)) player.moveRight();
-        else if (inputs.isKeyHeld(SDLK_a)) player.moveLeft();
-        else player.decelerate();
-        if (inputs.isKeyPressed(SDLK_SPACE)) player.jump();
+        if (inputs.isKeyHeld(SDLK_d)) {
+            player.moveRight();
+            player.setAnimation("run");
+        }
+        else if (inputs.isKeyHeld(SDLK_a)) {
+            player.moveLeft();
+            player.setAnimation("run");
+        }
+        else {
+            player.decelerate();
+            player.setAnimation("idle");
+        }
 
-        //if (inputs.isLeftClick()) player.fire();
+        if (inputs.isKeyPressed(SDLK_SPACE)) {
+            player.jump();
+            //player.setAnimation("jump"); // Don't have one for now lolol
+        }
+
+        if (inputs.isLeftClick()) {
+            weapon.fire();
+            //weapon.setAnimation("fire"); // Don't have one for now lolol
+        }
 
         player.update();
         player.draw();
+        weapon.update(player.getCenter());
+        weapon.draw();
         test.update();
         test.draw();
 

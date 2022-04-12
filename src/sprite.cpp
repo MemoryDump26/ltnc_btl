@@ -2,26 +2,27 @@
 #include "graphics.h"
 #include "vector2d.h"
 #include <SDL2/SDL.h>
+#include <iostream>
 
 Sprite::Sprite() {
 
 }
 
-Sprite::Sprite(Graphics* _graphics, const char path[], int _frameW, int _frameH, double scaler, int _speed) :
+Sprite::Sprite(Graphics* _graphics, const char path[], int _frameW, int _frameH, double scaler) :
     graphics {_graphics},
     frameW  {_frameW},
-    frameH {_frameH},
-    speed {_speed}
+    frameH {_frameH}
 {
     spritesheet = graphics->loadTexture(path);
     scaledW = frameW * scaler;
     scaledH = frameH * scaler;
     frameIndex = 0;
-    cooldown = speed;
 }
 
-void Sprite::addAnimation(std::string animation, size_t start, size_t end) {
+void Sprite::addAnimation(std::string animation, size_t start, size_t end, size_t _speed) {
     numOfFrame[animation] = end - start + 1;
+    speed[animation] = _speed;
+    cooldown = _speed;
     for (size_t i = start; i <= end; i++) {
         int col = i % 10;
         int row = i / 10;
@@ -32,7 +33,10 @@ void Sprite::addAnimation(std::string animation, size_t start, size_t end) {
 }
 
 void Sprite::setAnimation(std::string name) {
-    currAnimation = name;
+    if (currAnimation != name) {
+        currAnimation = name;
+        frameIndex = 0;
+    }
 }
 
 void Sprite::draw() {
@@ -43,7 +47,7 @@ void Sprite::draw() {
 
     if (cooldown == 0) {
         frameIndex = (frameIndex + 1) % numOfFrame[currAnimation];
-        cooldown = speed;
+        cooldown = speed[currAnimation];
     }
     else cooldown--;
 }

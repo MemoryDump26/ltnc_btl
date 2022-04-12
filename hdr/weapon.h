@@ -17,7 +17,6 @@ public:
 private:
     Vector2<int> angle;
     Vector2<int> cursor;
-    Vector2<int> center;
     int cooldown = 0;
 };
 

@@ -5,7 +5,6 @@
 #include "sprite.h"
 
 class Graphics;
-class Weapon;
 class SDL_Rect;
 
 class Player : public Sprite{
@@ -15,11 +14,11 @@ public:
     void update();
     void moveLeft();
     void moveRight();
-    void jump();
-    void fire();
     void decelerate();
+    void jump();
     void hit(int damage);
     int getHealth();
+    Vector2<int> getCenter();
     SDL_Rect* hitbox;
 private:
     int health;
@@ -30,7 +29,6 @@ private:
     Vector2<double> gravity;
     Vector2<double> velocity;
     Vector2<double> acceleration;
-    Vector2<int> center;
 };
 
 #endif
