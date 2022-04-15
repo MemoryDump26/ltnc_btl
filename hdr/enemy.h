@@ -11,11 +11,10 @@ class Enemy : public Sprite {
 public:
     Enemy(Graphics* _graphics);
     ~Enemy();
-    void update();
+    void update(const Vector2<int>& player);
     SDL_Rect* hitbox;
 private:
     Vector2<double> friction;
-    Vector2<double> gravity;
     Vector2<double> velocity;
     Vector2<double> acceleration;
 };

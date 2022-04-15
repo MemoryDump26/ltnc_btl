@@ -68,7 +68,7 @@ void Game::gameLoop() {
         player.draw();
         weapon.update(player.getCenter());
         weapon.draw();
-        test.update();
+        test.update(player.getCenter());
         test.draw();
 
         if (colliding(player.hitbox, test.hitbox)) {
@@ -78,7 +78,7 @@ void Game::gameLoop() {
 
         quit = inputs.quitting();
 
-        SDL_SetRenderDrawColor(graphics.getRenderer(), 255, 255, 255, SDL_ALPHA_OPAQUE);
+        SDL_SetRenderDrawColor(graphics.getRenderer(), 0, 0, 0, SDL_ALPHA_OPAQUE);
 
         Uint64 endTick = SDL_GetTicks64();
         Uint64 elapsedTime = endTick - startTick;

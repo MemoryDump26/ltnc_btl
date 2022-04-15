@@ -26,7 +26,6 @@ private:
     bool moving;
     int iframe;
     Vector2<double> friction;
-    Vector2<double> gravity;
     Vector2<double> velocity;
     Vector2<double> acceleration;
 };

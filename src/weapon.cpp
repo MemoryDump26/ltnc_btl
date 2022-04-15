@@ -4,18 +4,18 @@
 #include <cmath>
 
 namespace {
-    const char WEAPON_SPRITE[] = "assets/sprites/weapon.png";
-    const int SPRITE_WIDTH = 200;
-    const int SPRITE_HEIGHT = 200;
-    const double SPRITE_SCALE = 0.5;
+    const char WEAPON_SPRITE[] = "assets/sprites/weapon_new.png";
+    const int SPRITE_WIDTH = 500;
+    const int SPRITE_HEIGHT = 500;
+    const double SPRITE_SCALE = 0.25;
     const int WEAPON_DISTANCE = 200;
-    const int PROJECTILE_VELOCITY = 5;
+    const int PROJECTILE_VELOCITY = 3;
 }
 
 Weapon::Weapon(Graphics* _graphics) :
     Sprite(_graphics, WEAPON_SPRITE, SPRITE_WIDTH, SPRITE_HEIGHT, SPRITE_SCALE)
 {
-    addAnimation("idle", 0, 0, 1);
+    addAnimation("idle", 0, 9, 2);
 }
 
 Weapon::~Weapon() {
@@ -39,7 +39,7 @@ void Weapon::update(const Vector2<int> player) {
         center.x = position.x + SPRITE_WIDTH * SPRITE_SCALE / 2;
         center.y = position.y + SPRITE_HEIGHT * SPRITE_SCALE / 2;
 
-        SDL_SetRenderDrawColor(graphics->getRenderer(), 0, 0, 0, SDL_ALPHA_OPAQUE);
+        SDL_SetRenderDrawColor(graphics->getRenderer(), 255, 255, 255, SDL_ALPHA_OPAQUE);
         graphics->drawLine(player, center);
     }
     else {
@@ -48,7 +48,7 @@ void Weapon::update(const Vector2<int> player) {
         center.x = position.x + SPRITE_WIDTH * SPRITE_SCALE / 2;
         center.y = position.y + SPRITE_HEIGHT * SPRITE_SCALE / 2;
 
-        SDL_SetRenderDrawColor(graphics->getRenderer(), 0, 0, 0, SDL_ALPHA_OPAQUE);
+        SDL_SetRenderDrawColor(graphics->getRenderer(), 255, 255, 255, SDL_ALPHA_OPAQUE);
         graphics->drawLine(player, center);
         cooldown--;
     }
