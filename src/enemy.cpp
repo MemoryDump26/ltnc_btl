@@ -1,6 +1,5 @@
 #include "enemy.h"
 #include "graphics.h"
-#include "sprite.h"
 #include "utils.h"
 #include "globals.h"
 

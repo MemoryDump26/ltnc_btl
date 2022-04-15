@@ -1,12 +1,8 @@
 #include "player.h"
-#include "vector2d.h"
-#include "weapon.h"
 #include "graphics.h"
 #include "globals.h"
 #include "utils.h"
-#include "sprite.h"
 #include <SDL2/SDL.h>
-#include <iostream>
 
 namespace {
     const char PLAYER_SPRITE[] = "assets/sprites/character.png";

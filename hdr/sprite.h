@@ -24,16 +24,13 @@ protected:
     Vector2<int> center;
     Graphics* graphics;
 
-protected:
-    size_t frameIndex;
-    int cooldown;
-
 private:
     int frameW;
     int frameH;
     int scaledW;
     int scaledH;
-    //int speed;
+    size_t frameIndex;
+    int cooldown;
     SDL_Texture* spritesheet;
     std::string currAnimation;
     std::map<std::string, std::vector<SDL_Rect>> animations;

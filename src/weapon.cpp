@@ -1,6 +1,5 @@
 #include "weapon.h"
 #include "graphics.h"
-#include "sprite.h"
 #include <SDL2/SDL.h>
 #include <cmath>
 
