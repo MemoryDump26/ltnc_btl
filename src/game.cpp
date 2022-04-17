@@ -6,6 +6,7 @@
 #include "weapon.h"
 #include "textbox.h"
 #include "enemy.h"
+#include "area2d.h"
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
@@ -32,7 +33,7 @@ void Game::gameLoop() {
     Weapon weapon(&graphics);
     TextBox text(&graphics, "assets/fonts/iosevka-regular.ttc", 20);
     Enemy test(&graphics);
-    SDL_Color color = {0, 0, 0, 255};
+    SDL_Color color = {255, 255, 255, 255};
 
     bool quit = false;
     while (!quit) {
@@ -43,25 +44,20 @@ void Game::gameLoop() {
 
         if (inputs.isKeyHeld(SDLK_d)) {
             player.moveRight();
-            player.setAnimation("run");
         }
         else if (inputs.isKeyHeld(SDLK_a)) {
             player.moveLeft();
-            player.setAnimation("run");
         }
         else {
             player.decelerate();
-            player.setAnimation("idle");
         }
 
         if (inputs.isKeyPressed(SDLK_SPACE)) {
             player.jump();
-            //player.setAnimation("jump"); // Don't have one for now lolol
         }
 
         if (inputs.isLeftClick()) {
             weapon.fire();
-            //weapon.setAnimation("fire"); // Don't have one for now lolol
         }
 
         player.update();
@@ -71,7 +67,7 @@ void Game::gameLoop() {
         test.update(player.getCenter());
         test.draw();
 
-        if (colliding(player.hitbox, test.hitbox)) {
+        if (colliding(test.hitbox, player.hitbox)) {
             player.hit(20);
             std::cout << "hit! " << player.getHealth() << " HP left\n";
         }
@@ -91,10 +87,4 @@ void Game::gameLoop() {
         SDL_Delay((1000 / globals::GAME_FPS) - elapsedTime);
     }
 
-}
-
-bool Game::colliding(SDL_Rect* one, SDL_Rect* two) {
-    if (one->x > two->x + two->w || one->x + one->w < two->x) return false;
-    else if (one->y > two->y + two->h || one->y + one->h < two->y) return false;
-    return true;
 }

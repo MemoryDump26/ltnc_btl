@@ -5,7 +5,7 @@
 #include <SDL2/SDL.h>
 
 namespace {
-    const char PLAYER_SPRITE[] = "assets/sprites/character.png";
+    const char PLAYER_SPRITE[] = "assets/sprites/character_debug.png";
     const int SPRITE_WIDTH = 250;
     const int SPRITE_HEIGHT = 500;
     const double SPRITE_SCALE = 0.5;
@@ -27,10 +27,14 @@ enum Direction {
 Player::Player(Graphics* _graphics) :
     Sprite(_graphics, PLAYER_SPRITE, SPRITE_WIDTH, SPRITE_HEIGHT, SPRITE_SCALE)
 {
-    addAnimation("idle", 0, 1, 10);
-    addAnimation("run", 0, 9, 5);
+    /*addAnimation("idle", 0, 1, 10);
+    addAnimation("run", 0, 9, 5);*/
+    addAnimation("idle", 0, 0, 1);
+    addAnimation("run", 0, 0, 1);
     health = MAX_HEALTH;
-    hitbox = new SDL_Rect {0, 0, 125, 250};
+    //hitbox = new SDL_Rect {0, 0, 125, 250};
+    hitbox.w = SPRITE_WIDTH * SPRITE_SCALE;
+    hitbox.h = SPRITE_HEIGHT * SPRITE_SCALE;
     iframe = 0;
 }
 
@@ -46,8 +50,7 @@ void Player::update() {
     position.x = clamp(round(position.x + velocity.x), 0.0, globals::GAME_WIDTH - SPRITE_WIDTH * SPRITE_SCALE);
     position.y = clamp((position.y + velocity.y), 0.0, globals::GAME_HEIGHT - SPRITE_HEIGHT * SPRITE_SCALE);
 
-    hitbox->x = position.x;
-    hitbox->y = position.y;
+    hitbox.update(position);
 
     center.x = position.x + SPRITE_WIDTH * SPRITE_SCALE / 2;
     center.y = position.y + SPRITE_HEIGHT * SPRITE_SCALE / 2;
@@ -67,15 +70,18 @@ void Player::update() {
 }
 
 void Player::moveLeft() {
-        acceleration.x = -ACCELERATION_CONST;
+    acceleration.x = -ACCELERATION_CONST;
+    setAnimation("run");
 }
 
 void Player::moveRight() {
-        acceleration.x = ACCELERATION_CONST;
+    acceleration.x = ACCELERATION_CONST;
+    setAnimation("run");
 }
 
 void Player::decelerate() {
     acceleration.x = 0;
+    setAnimation("idle");
 }
 
 void Player::jump() {

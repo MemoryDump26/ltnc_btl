@@ -1,11 +1,8 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
-#include "vector2d.h"
 #include "sprite.h"
-
-class Graphics;
-class SDL_Rect;
+#include "area2d.h"
 
 class Player : public Sprite{
 public:
@@ -19,7 +16,7 @@ public:
     void hit(int damage);
     int getHealth();
     Vector2<int> getCenter();
-    SDL_Rect* hitbox;
+    Rectangle hitbox;
 private:
     int health;
     bool onGround;

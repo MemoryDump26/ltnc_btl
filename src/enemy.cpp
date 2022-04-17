@@ -5,7 +5,7 @@
 #include "vector2d.h"
 
 namespace {
-    const char ENEMY_SPRITE[] = "assets/sprites/enemy.png";
+    const char ENEMY_SPRITE[] = "assets/sprites/enemy_debug.png";
     const int SPRITE_WIDTH = 200;
     const int SPRITE_HEIGHT = 200;
     const double SPRITE_SCALE = 0.5;
@@ -16,8 +16,8 @@ namespace {
 Enemy::Enemy(Graphics* _graphics) :
     Sprite(_graphics, ENEMY_SPRITE, SPRITE_WIDTH, SPRITE_HEIGHT, SPRITE_SCALE)
 {
-    addAnimation("idle", 0, 9, 5);
-    hitbox = new SDL_Rect {0, 0, 100, 100};
+    addAnimation("idle", 0, 0, 5);
+    hitbox.r = SPRITE_WIDTH * SPRITE_SCALE / 2;
 }
 
 Enemy::~Enemy() {
@@ -36,9 +36,8 @@ void Enemy::update(const Vector2<int>& player) {
     position.x = clamp(round(position.x + velocity.x), 0.0, globals::GAME_WIDTH - SPRITE_WIDTH * SPRITE_SCALE);
     position.y = clamp(round(position.y + velocity.y), 0.0, globals::GAME_HEIGHT - SPRITE_HEIGHT * SPRITE_SCALE);
 
-    hitbox->x = position.x;
-    hitbox->y = position.y;
-
     center.x = position.x + SPRITE_WIDTH * SPRITE_SCALE / 2;
     center.y = position.y + SPRITE_HEIGHT * SPRITE_SCALE / 2;
+
+    hitbox.update(center);
 }

@@ -8,9 +8,7 @@ public:
     Game();
     ~Game();
     void gameLoop();
-    bool colliding(SDL_Rect* one, SDL_Rect* two);
 private:
-
 };
 
 #endif

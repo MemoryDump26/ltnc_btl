@@ -1,18 +1,15 @@
 #ifndef ENEMY_H
 #define ENEMY_H
 
-#include "vector2d.h"
 #include "sprite.h"
-
-class Graphics;
-class SDL_Rect;
+#include "area2d.h"
 
 class Enemy : public Sprite {
 public:
     Enemy(Graphics* _graphics);
     ~Enemy();
     void update(const Vector2<int>& player);
-    SDL_Rect* hitbox;
+    Circle hitbox;
 private:
     Vector2<double> friction;
     Vector2<double> velocity;

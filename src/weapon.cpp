@@ -4,7 +4,7 @@
 #include <cmath>
 
 namespace {
-    const char WEAPON_SPRITE[] = "assets/sprites/weapon_new.png";
+    const char WEAPON_SPRITE[] = "assets/sprites/weapon.png";
     const int SPRITE_WIDTH = 500;
     const int SPRITE_HEIGHT = 500;
     const double SPRITE_SCALE = 0.25;
