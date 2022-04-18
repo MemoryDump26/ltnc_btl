@@ -17,6 +17,8 @@ public:
     Vector2(T _x, T _y);
     ~Vector2();
 
+    Vector2<T>& operator=(const Vector2<T>& rhs);
+
     friend Vector2<T> operator+ <> (const Vector2<T>& v1, const Vector2<T>& v2);
     Vector2<T>& operator+=(const Vector2<T>& rhs);
 
@@ -48,12 +50,19 @@ Vector2<T>::~Vector2() {
 }
 
 template <class T>
+Vector2<T>& Vector2<T>::operator=(const Vector2<T>& rhs) {
+    this->x = rhs.x;
+    this->y = rhs.y;
+    return *this;
+}
+
+template <class T>
 Vector2<T> operator+(const Vector2<T>& v1, const Vector2<T>& v2) {
     return Vector2<T>(v1.x + v2.x, v1.y + v2.y);
 }
 
 template <class T>
-Vector2<T>& Vector2<T>::operator+=(const Vector2& rhs) {
+Vector2<T>& Vector2<T>::operator+=(const Vector2<T>& rhs) {
     this->x += rhs.x;
     this->y += rhs.y;
     return *this;

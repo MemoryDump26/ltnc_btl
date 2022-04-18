@@ -101,6 +101,6 @@ int Player::getHealth() {
     return health;
 }
 
-Vector2<int> Player::getCenter() {
-    return center;
+Vector2<int>* Player::getCenter() {
+    return &center;
 }

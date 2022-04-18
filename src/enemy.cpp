@@ -24,9 +24,9 @@ Enemy::~Enemy() {
 
 }
 
-void Enemy::update(const Vector2<int>& player) {
-    acceleration.x = (player.x - center.x) * 0.02;
-    acceleration.y = (player.y - center.y) * 0.02;
+void Enemy::update(const Vector2<int>* player) {
+    acceleration.x = (player->x - center.x) * 0.02;
+    acceleration.y = (player->y - center.y) * 0.02;
 
     friction.x = -velocity.x * X_FRICTION_CONST;
     friction.y = -velocity.y * Y_FRICTION_CONST;
@@ -42,10 +42,10 @@ void Enemy::update(const Vector2<int>& player) {
     hitbox.update(center);
 }
 
-void Enemy::hit(int damage) {
+void Enemy::hit(const Vector2<int>* wPos, int damage) {
     if (damage == 4) died();
     else {
-        velocity *= -10;
+        //velocity = *wPos - position;
     }
 }
 

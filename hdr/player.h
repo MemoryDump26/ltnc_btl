@@ -15,7 +15,7 @@ public:
     void jump();
     void hit(int damage);
     int getHealth();
-    Vector2<int> getCenter();
+    Vector2<int>* getCenter();
     Rectangle hitbox;
 private:
     int health;

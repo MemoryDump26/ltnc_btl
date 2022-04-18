@@ -3,13 +3,14 @@
 
 #include "sprite.h"
 #include "area2d.h"
+#include "vector2d.h"
 
 class Enemy : public Sprite {
 public:
     Enemy(Graphics* _graphics);
     ~Enemy();
-    void update(const Vector2<int>& player);
-    void hit(int damage);
+    void update(const Vector2<int>* player);
+    void hit(const Vector2<int>* wPos, int damage);
     void died();
     Circle hitbox;
 private:

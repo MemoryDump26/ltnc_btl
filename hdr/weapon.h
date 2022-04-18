@@ -11,10 +11,11 @@ class Weapon : public Sprite{
 public:
     Weapon(Graphics* _graphics);
     ~Weapon();
-    void update(const Vector2<int> player);
+    void update(const Vector2<int>* player);
     void fire();
     void hit();
     int getPower();
+    Vector2<int>* getCenter();
     Circle hitbox;
 private:
     Vector2<int> angle;

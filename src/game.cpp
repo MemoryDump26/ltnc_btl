@@ -74,7 +74,7 @@ void Game::gameLoop() {
 
         if (colliding(weapon.hitbox, test.hitbox)) {
             weapon.hit();
-            test.hit(weapon.getPower());
+            test.hit(weapon.getCenter(), weapon.getPower());
             std::cout << "enemy hit!\n";
         }
 

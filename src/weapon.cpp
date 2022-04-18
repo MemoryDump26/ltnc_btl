@@ -24,25 +24,25 @@ Weapon::~Weapon() {
 
 }
 
-void Weapon::update(const Vector2<int> player) {
+void Weapon::update(const Vector2<int>* player) {
 
     if (cooldown == 0) {
         SDL_GetMouseState(&cursor.x, &cursor.y);
-        cursor -= player;
+        cursor -= *player;
 
         double relDist = sqrt(pow(cursor.x, 2) + pow(cursor.y, 2));
 
         double scale = relDist / WEAPON_DISTANCE;
         angle = cursor / scale;
 
-        position = player + angle;
+        position = *player + angle;
         position -= {50, 50};
 
         center.x = position.x + SPRITE_WIDTH * SPRITE_SCALE / 2;
         center.y = position.y + SPRITE_HEIGHT * SPRITE_SCALE / 2;
 
         SDL_SetRenderDrawColor(graphics->getRenderer(), 255, 255, 255, SDL_ALPHA_OPAQUE);
-        graphics->drawLine(player, center);
+        graphics->drawLine(*player, center);
     }
     else {
 
@@ -51,7 +51,7 @@ void Weapon::update(const Vector2<int> player) {
         center.y = position.y + SPRITE_HEIGHT * SPRITE_SCALE / 2;
 
         SDL_SetRenderDrawColor(graphics->getRenderer(), 255, 255, 255, SDL_ALPHA_OPAQUE);
-        graphics->drawLine(player, center);
+        graphics->drawLine(*player, center);
         cooldown--;
     }
 
@@ -70,4 +70,8 @@ int Weapon::getPower() {
 
 void Weapon::hit() {
     power = clamp(power + 1, 0, 3);
+}
+
+Vector2<int>* Weapon::getCenter() {
+    return &center;
 }
