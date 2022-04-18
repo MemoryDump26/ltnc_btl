@@ -1,5 +1,6 @@
 #include "weapon.h"
 #include "graphics.h"
+#include "utils.h"
 #include <SDL2/SDL.h>
 #include <cmath>
 
@@ -16,6 +17,7 @@ Weapon::Weapon(Graphics* _graphics) :
     Sprite(_graphics, WEAPON_SPRITE, SPRITE_WIDTH, SPRITE_HEIGHT, SPRITE_SCALE)
 {
     addAnimation("idle", 0, 9, 2);
+    hitbox.r = SPRITE_WIDTH * SPRITE_SCALE * 0.5;
 }
 
 Weapon::~Weapon() {
@@ -52,10 +54,20 @@ void Weapon::update(const Vector2<int> player) {
         graphics->drawLine(player, center);
         cooldown--;
     }
+
+    hitbox.update(center);
 }
 
 void Weapon::fire() {
-    if (cooldown == 0) {
+    if (cooldown == 0 && power == 3) {
         cooldown = 50;
     }
+}
+
+int Weapon::getPower() {
+    return power;
+}
+
+void Weapon::hit() {
+    power = clamp(power + 1, 0, 3);
 }

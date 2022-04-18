@@ -9,6 +9,8 @@ public:
     Enemy(Graphics* _graphics);
     ~Enemy();
     void update(const Vector2<int>& player);
+    void hit(int damage);
+    void died();
     Circle hitbox;
 private:
     Vector2<double> friction;

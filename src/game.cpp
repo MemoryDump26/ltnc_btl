@@ -72,6 +72,12 @@ void Game::gameLoop() {
             std::cout << "hit! " << player.getHealth() << " HP left\n";
         }
 
+        if (colliding(weapon.hitbox, test.hitbox)) {
+            weapon.hit();
+            test.hit(weapon.getPower());
+            std::cout << "enemy hit!\n";
+        }
+
         quit = inputs.quitting();
 
         SDL_SetRenderDrawColor(graphics.getRenderer(), 0, 0, 0, SDL_ALPHA_OPAQUE);
