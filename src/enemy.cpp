@@ -45,7 +45,8 @@ void Enemy::update(const Vector2<int>* player) {
 void Enemy::hit(const Vector2<int>* wPos, int damage) {
     if (damage == 4) died();
     else {
-        //velocity = *wPos - position;
+        velocity.x = (position.x - wPos->x) * 2;
+        velocity.y = (position.y - wPos->y) * 2;
     }
 }
 
