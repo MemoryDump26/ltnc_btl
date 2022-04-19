@@ -17,6 +17,7 @@ private:
     Vector2<double> friction;
     Vector2<double> velocity;
     Vector2<double> acceleration;
+    int hitTimer = 0;
 };
 
 #endif

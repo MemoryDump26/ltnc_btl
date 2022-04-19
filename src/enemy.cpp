@@ -9,8 +9,8 @@ namespace {
     const int SPRITE_WIDTH = 200;
     const int SPRITE_HEIGHT = 200;
     const double SPRITE_SCALE = 0.5;
-    const double X_FRICTION_CONST = 0.4;
-    const double Y_FRICTION_CONST = 0.4;
+    const double X_FRICTION_CONST = 0.3;
+    const double Y_FRICTION_CONST = 0.3;
 }
 
 Enemy::Enemy(Graphics* _graphics) :
@@ -25,11 +25,18 @@ Enemy::~Enemy() {
 }
 
 void Enemy::update(const Vector2<int>* player) {
-    acceleration.x = (player->x - center.x) * 0.02;
-    acceleration.y = (player->y - center.y) * 0.02;
+    if (hitTimer != 0) {
+        acceleration = {0, 0};
+        friction = {-1, -1};
+        hitTimer--;
+    }
+    else {
+        acceleration.x = (player->x - center.x) * 0.02;
+        acceleration.y = (player->y - center.y) * 0.02;
+        friction.x = -velocity.x * X_FRICTION_CONST;
+        friction.y = -velocity.y * Y_FRICTION_CONST;
+    }
 
-    friction.x = -velocity.x * X_FRICTION_CONST;
-    friction.y = -velocity.y * Y_FRICTION_CONST;
 
     velocity += acceleration + friction;
 
@@ -45,8 +52,9 @@ void Enemy::update(const Vector2<int>* player) {
 void Enemy::hit(const Vector2<int>* wPos, int damage) {
     if (damage == 4) died();
     else {
-        velocity.x = (position.x - wPos->x) * 2;
-        velocity.y = (position.y - wPos->y) * 2;
+        velocity.x = (position.x - wPos->x);
+        velocity.y = (position.y - wPos->y);
+        hitTimer = 30;
     }
 }
 
