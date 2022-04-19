@@ -32,7 +32,7 @@ void Game::gameLoop() {
     Player player(&graphics, {0, 0});
     Weapon weapon(&graphics, {0, 0});
     TextBox text(&graphics, "assets/fonts/iosevka-regular.ttc", 20);
-    Enemy test(&graphics, {1920, 0});
+    Enemy test(&graphics, {1000, 0});
     SDL_Color color = {255, 255, 255, 255};
 
     bool quit = false;
