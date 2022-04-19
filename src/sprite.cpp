@@ -8,14 +8,18 @@ Sprite::Sprite() {
 
 }
 
-Sprite::Sprite(Graphics* _graphics, const char path[], int _frameW, int _frameH, double scaler) :
+Sprite::Sprite(
+        Graphics* _graphics, const char path[], int _frameW, int _frameH,
+        double scaler, const Vector2<int>& _spawn
+        ) :
     offset{
         static_cast<int>(_frameW * scaler / 2),
         static_cast<int>(_frameH* scaler / 2)
     },
     graphics {_graphics},
     frameW  {_frameW},
-    frameH {_frameH}
+    frameH {_frameH},
+    position {_spawn}
 {
     spritesheet = graphics->loadTexture(path);
     scaledW = frameW * scaler;

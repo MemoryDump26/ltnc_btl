@@ -24,8 +24,8 @@ enum Direction {
     RIGHT,
 };
 
-Player::Player(Graphics* _graphics) :
-    Sprite(_graphics, PLAYER_SPRITE, SPRITE_WIDTH, SPRITE_HEIGHT, SPRITE_SCALE)
+Player::Player(Graphics* _graphics, Vector2<int> _spawn) :
+    Sprite(_graphics, PLAYER_SPRITE, SPRITE_WIDTH, SPRITE_HEIGHT, SPRITE_SCALE, _spawn)
 {
     /*addAnimation("idle", 0, 1, 10);
     addAnimation("run", 0, 9, 5);*/

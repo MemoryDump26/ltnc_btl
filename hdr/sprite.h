@@ -13,7 +13,10 @@ class SDL_Rect;
 class Sprite {
 public:
     Sprite();
-    Sprite(Graphics* _graphics, const char path[], int _frameW, int _frameH, double scaler);
+    Sprite(
+            Graphics* _graphics, const char path[], int _frameW, int _frameH,
+            double scaler, const Vector2<int>& _spawn
+          );
     ~Sprite();
     void addAnimation(std::string name, size_t start, size_t end, size_t _speed);
     void setAnimation(std::string name);

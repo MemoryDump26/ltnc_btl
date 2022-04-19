@@ -13,8 +13,8 @@ namespace {
     const int PROJECTILE_VELOCITY = 3;
 }
 
-Weapon::Weapon(Graphics* _graphics) :
-    Sprite(_graphics, WEAPON_SPRITE, SPRITE_WIDTH, SPRITE_HEIGHT, SPRITE_SCALE)
+Weapon::Weapon(Graphics* _graphics, const Vector2<int>& _spawn) :
+    Sprite(_graphics, WEAPON_SPRITE, SPRITE_WIDTH, SPRITE_HEIGHT, SPRITE_SCALE, _spawn)
 {
     addAnimation("idle", 0, 9, 2);
     hitbox.r = SPRITE_WIDTH * SPRITE_SCALE * 0.5;
@@ -46,8 +46,7 @@ void Weapon::update(const Vector2<int>* player) {
     else {
 
         position += angle / PROJECTILE_VELOCITY;
-        center.x = position.x + SPRITE_WIDTH * SPRITE_SCALE / 2;
-        center.y = position.y + SPRITE_HEIGHT * SPRITE_SCALE / 2;
+        center = position + offset;
 
         SDL_SetRenderDrawColor(graphics->getRenderer(), 255, 255, 255, SDL_ALPHA_OPAQUE);
         graphics->drawLine(*player, center);
@@ -58,8 +57,9 @@ void Weapon::update(const Vector2<int>* player) {
 }
 
 void Weapon::fire() {
-    if (cooldown == 0 && power == 3) {
+    if (cooldown == 0 && power == 2) {
         cooldown = 50;
+        power = -1;
     }
 }
 
@@ -68,7 +68,9 @@ int Weapon::getPower() {
 }
 
 void Weapon::hit() {
-    power = clamp(power + 1, 0, 3);
+    if (cooldown == 0) {
+        power = clamp(power + 1, 0, 2);
+    }
 }
 
 Vector2<int>* Weapon::getCenter() {

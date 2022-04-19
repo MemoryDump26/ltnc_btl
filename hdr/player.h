@@ -6,7 +6,7 @@
 
 class Player : public Sprite{
 public:
-    Player(Graphics* _graphics);
+    Player(Graphics* _graphics, Vector2<int> _position);
     ~Player();
     void update();
     void moveLeft();

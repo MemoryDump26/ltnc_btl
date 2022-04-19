@@ -13,8 +13,8 @@ namespace {
     const double Y_FRICTION_CONST = 0.3;
 }
 
-Enemy::Enemy(Graphics* _graphics) :
-    Sprite(_graphics, ENEMY_SPRITE, SPRITE_WIDTH, SPRITE_HEIGHT, SPRITE_SCALE)
+Enemy::Enemy(Graphics* _graphics, const Vector2<int>& _spawn) :
+    Sprite(_graphics, ENEMY_SPRITE, SPRITE_WIDTH, SPRITE_HEIGHT, SPRITE_SCALE, _spawn)
 {
     addAnimation("idle", 0, 0, 5);
     hitbox.r = SPRITE_WIDTH * SPRITE_SCALE / 2;
