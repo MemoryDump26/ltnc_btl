@@ -52,8 +52,7 @@ void Player::update() {
 
     hitbox.update(position);
 
-    center.x = position.x + SPRITE_WIDTH * SPRITE_SCALE / 2;
-    center.y = position.y + SPRITE_HEIGHT * SPRITE_SCALE / 2;
+    center = position + offset;
 
     if (position.y == globals::GAME_HEIGHT - SPRITE_HEIGHT * SPRITE_SCALE) onGround = true;
     else onGround = false;

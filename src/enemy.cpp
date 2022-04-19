@@ -37,14 +37,12 @@ void Enemy::update(const Vector2<int>* player) {
         friction.y = -velocity.y * Y_FRICTION_CONST;
     }
 
-
     velocity += acceleration + friction;
 
     position.x = clamp(round(position.x + velocity.x), 0.0, globals::GAME_WIDTH - SPRITE_WIDTH * SPRITE_SCALE);
     position.y = clamp(round(position.y + velocity.y), 0.0, globals::GAME_HEIGHT - SPRITE_HEIGHT * SPRITE_SCALE);
 
-    center.x = position.x + SPRITE_WIDTH * SPRITE_SCALE / 2;
-    center.y = position.y + SPRITE_HEIGHT * SPRITE_SCALE / 2;
+    center = position + offset;
 
     hitbox.update(center);
 }

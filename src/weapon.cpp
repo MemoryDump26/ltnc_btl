@@ -36,13 +36,9 @@ void Weapon::update(const Vector2<int>* player) {
         angle = cursor / scale;
 
         position = *player + angle;
-        position -= {
-            static_cast<int>(SPRITE_WIDTH * SPRITE_SCALE / 2),
-            static_cast<int>(SPRITE_HEIGHT * SPRITE_SCALE / 2),
-        };
 
-        center.x = position.x + SPRITE_WIDTH * SPRITE_SCALE / 2;
-        center.y = position.y + SPRITE_HEIGHT * SPRITE_SCALE / 2;
+        position -= offset;
+        center = position + offset;
 
         SDL_SetRenderDrawColor(graphics->getRenderer(), 255, 255, 255, SDL_ALPHA_OPAQUE);
         graphics->drawLine(*player, center);

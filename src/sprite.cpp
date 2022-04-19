@@ -9,6 +9,10 @@ Sprite::Sprite() {
 }
 
 Sprite::Sprite(Graphics* _graphics, const char path[], int _frameW, int _frameH, double scaler) :
+    offset{
+        static_cast<int>(_frameW * scaler / 2),
+        static_cast<int>(_frameH* scaler / 2)
+    },
     graphics {_graphics},
     frameW  {_frameW},
     frameH {_frameH}

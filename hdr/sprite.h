@@ -22,6 +22,7 @@ public:
 protected:
     Vector2<int> position;
     Vector2<int> center;
+    Vector2<int> offset;
     Graphics* graphics;
 
 private:
