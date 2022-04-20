@@ -1,5 +1,6 @@
 # Clangd cache
 .cache
+.ccls-cache
 compile_commands.json
 
 # Todos
