@@ -7,8 +7,10 @@
 #include "textbox.h"
 #include "enemy.h"
 #include "area2d.h"
+#include "timer.h"
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
+#include <SDL2/SDL_keycode.h>
 #include <SDL2/SDL_ttf.h>
 #include <ctime>
 #include <iostream>
@@ -34,6 +36,8 @@ void Game::gameLoop() {
     TextBox text(&graphics, "assets/fonts/iosevka-regular.ttc", 20);
     Enemy test(&graphics, {1000, 0});
     SDL_Color color = {255, 255, 255, 255};
+    Timer timePassed;
+    timePassed.start();
 
     bool quit = false;
     while (!quit) {
@@ -58,6 +62,17 @@ void Game::gameLoop() {
 
         if (inputs.isLeftClick()) {
             weapon.fire();
+        }
+
+        if (inputs.isKeyPressed(SDLK_p)) {
+            if (timePassed.isPausing()) {
+                timePassed.resume();
+            }
+            else timePassed.pause();
+        }
+
+        if (inputs.isKeyPressed(SDLK_RETURN)) {
+            timePassed.start();
         }
 
         player.update();
@@ -85,8 +100,12 @@ void Game::gameLoop() {
         Uint64 endTick = SDL_GetTicks64();
         Uint64 elapsedTime = endTick - startTick;
 
+        // Look at this mess lmao
+        /*char* elapsedText = new char[10];
+        sprintf(elapsedText, "%d", player.getHealth());*/
+        //const char* elapsedText = timePassed.getTimeHuman().c_str();
         char* elapsedText = new char[10];
-        sprintf(elapsedText, "%d", player.getHealth());
+        sprintf(elapsedText, "%d", timePassed.getTime());
         text.update(elapsedText, &color);
         text.draw();
         graphics.present();

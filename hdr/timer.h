@@ -2,6 +2,7 @@
 #define TIMER_H
 
 #include <SDL2/SDL.h>
+#include <string>
 
 class Timer {
 public:
@@ -10,7 +11,9 @@ public:
     void start();
     void pause();
     void resume();
+    bool isPausing();
     Uint64 getTime();
+    std::string getTimeHuman();
 private:
     Uint64 startTime;
     Uint64 pausedTime;

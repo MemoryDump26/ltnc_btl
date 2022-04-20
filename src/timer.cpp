@@ -1,7 +1,9 @@
 #include "timer.h"
 #include <SDL2/SDL_timer.h>
+#include <string>
 
 Timer::Timer() {}
+Timer::~Timer() {}
 
 void Timer::start() {
     startTime = SDL_GetTicks64();
@@ -12,6 +14,7 @@ void Timer::start() {
 void Timer::pause() {
     if (pausing == false) {
         pausedTime = SDL_GetTicks64() - startTime;
+        pausing = true;
     }
 }
 
@@ -23,6 +26,24 @@ void Timer::resume() {
     }
 }
 
+bool Timer::isPausing() {
+    return pausing;
+}
+
 Uint64 Timer::getTime() {
-    return SDL_GetTicks64() - startTime;
+    if (pausing == true) {
+        return pausedTime;
+    }
+    else return SDL_GetTicks64() - startTime;
+}
+
+std::string Timer::getTimeHuman() {
+    int seconds = getTime() / 1000;
+    int hours = seconds / 3600;
+    int minutes = seconds % 3600 / 60;
+    seconds = seconds % 60;
+    return
+        std::to_string(hours) + ":" +
+        std::to_string(minutes) + ":" +
+        std::to_string(seconds);
 }
