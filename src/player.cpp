@@ -89,7 +89,7 @@ void Player::jump() {
     }
 }
 
-void Player::hit(int damage) {
+void Player::gotHit(int damage) {
     if (!iframe) {
         health -= damage;
         iframe = 20;

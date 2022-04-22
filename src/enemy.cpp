@@ -8,9 +8,9 @@ namespace {
     const char ENEMY_SPRITE[] = "assets/sprites/enemy_debug.png";
     const int SPRITE_WIDTH = 200;
     const int SPRITE_HEIGHT = 200;
-    const double SPRITE_SCALE = 0.5;
-    const double X_FRICTION_CONST = 0.2;
-    const double Y_FRICTION_CONST = 0.2;
+    const double SPRITE_SCALE = 0.25;
+    const double FRICTION_CONST = -0.1;
+    const double KNOCKBACK_CONST = 0.5;
 }
 
 Enemy::Enemy(Graphics* _graphics, const Vector2<int>& _spawn) :
@@ -25,28 +25,27 @@ Enemy::~Enemy() {
 }
 
 void Enemy::update(const Vector2<int>* player) {
+    acceleration.x = (player->x - center.x) * 0.005;
+    acceleration.y = (player->y - center.y) * 0.005;
+    friction = velocity * FRICTION_CONST;
+
     if (hitTimer != 0) {
-        acceleration = {0, 0};
+        acceleration *= 0.01;
+        friction *= 0.5;
         hitTimer--;
-    }
-    else {
-        acceleration.x = (player->x - center.x) * 0.01;
-        acceleration.y = (player->y - center.y) * 0.01;
     }
 
     velocity += acceleration + friction;
-    friction.x = -velocity.x * X_FRICTION_CONST;
-    friction.y = -velocity.y * Y_FRICTION_CONST;
     position.x += velocity.x;
     position.y += velocity.y;
 
     if (position.x >= globals::GAME_WIDTH - SPRITE_WIDTH * SPRITE_SCALE ||
         position.x <= 0) {
-        velocity.x *= -0.5;
+        velocity.x *= -0.3;
     }
     if (position.y >= globals::GAME_HEIGHT - SPRITE_WIDTH * SPRITE_SCALE ||
         position.y <= 0) {
-        velocity.y *= -0.5;
+        velocity.y *= -0.3;
     }
     printf("Enemy at (%d, %d)", position.x, position.y);
 
@@ -58,12 +57,18 @@ void Enemy::update(const Vector2<int>* player) {
     hitbox.update(center);
 }
 
-void Enemy::hit(const Vector2<int>* wPos, int damage) {
+void Enemy::hit(const Vector2<int>* pPos) {
+    velocity.x = (position.x - pPos->x) * KNOCKBACK_CONST;
+    velocity.y = (position.y - pPos->y) * KNOCKBACK_CONST;
+    hitTimer = 50;
+}
+
+void Enemy::gotHit(const Vector2<int>* wPos, int damage) {
     if (damage == 4) died();
     else {
-        velocity.x = (position.x - wPos->x);
-        velocity.y = (position.y - wPos->y);
-        hitTimer = 30;
+        velocity.x = (position.x - wPos->x) * KNOCKBACK_CONST;
+        velocity.y = (position.y - wPos->y) * KNOCKBACK_CONST;
+        hitTimer = 50;
     }
 }
 

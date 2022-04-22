@@ -13,7 +13,7 @@ public:
     void moveRight();
     void decelerate();
     void jump();
-    void hit(int damage);
+    void gotHit(int damage);
     int getHealth();
     Vector2<int>* getCenter();
     Rectangle hitbox;
