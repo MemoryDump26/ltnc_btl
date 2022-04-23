@@ -8,7 +8,7 @@ namespace {
     const char PLAYER_SPRITE[] = "assets/sprites/character_debug.png";
     const int SPRITE_WIDTH = 250;
     const int SPRITE_HEIGHT = 500;
-    const double SPRITE_SCALE = 0.5;
+    const double SPRITE_SCALE = 0.25;
     const double GRAVITY_CONST = 2;
     const double ACCELERATION_CONST = 3;
     const double X_FRICTION_CONST = 0.25;

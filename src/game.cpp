@@ -24,6 +24,7 @@ Game::Game() {
 
 Game::~Game() {
     TTF_Quit();
+    IMG_Quit();
     SDL_Quit();
 }
 
