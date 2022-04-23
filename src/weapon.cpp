@@ -17,7 +17,7 @@ Weapon::Weapon(Graphics* _graphics, const Vector2<int>& _spawn) :
     Sprite(_graphics, WEAPON_SPRITE, SPRITE_WIDTH, SPRITE_HEIGHT, SPRITE_SCALE, _spawn)
 {
     addAnimation("idle", 0, 9, 2);
-    hitbox.r = SPRITE_WIDTH * SPRITE_SCALE * 0.5;
+    hitbox.r = SPRITE_WIDTH * SPRITE_SCALE / 3;
 }
 
 Weapon::~Weapon() {

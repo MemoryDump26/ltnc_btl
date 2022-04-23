@@ -86,7 +86,6 @@ void Game::gameLoop() {
         if (colliding(test.hitbox, player.hitbox)) {
             test.hit(player.getCenter());
             player.gotHit(20);
-            //test.gotHit(player.getCenter(), weapon.getPower());
             std::cout << "hit! " << player.getHealth() << " HP left\n";
         }
 

@@ -5,19 +5,24 @@
 #include "vector2d.h"
 
 namespace {
-    const char ENEMY_SPRITE[] = "assets/sprites/enemy_debug.png";
-    const int SPRITE_WIDTH = 200;
-    const int SPRITE_HEIGHT = 200;
-    const double SPRITE_SCALE = 0.25;
+    const char ENEMY_SPRITE[] = "assets/sprites/enemy.png";
+    const int SPRITE_WIDTH = 1000;
+    const int SPRITE_HEIGHT = 1000;
+    const double SPRITE_SCALE = 0.1;
+    const double HITBOX_SCALE = 0.3;
     const double FRICTION_CONST = -0.1;
     const double KNOCKBACK_CONST = 0.5;
+    const int X_BOT_BOUND = - SPRITE_WIDTH * SPRITE_SCALE * HITBOX_SCALE;
+    const int X_TOP_BOUND = globals::GAME_WIDTH + X_BOT_BOUND;
+    const int Y_BOT_BOUND = - SPRITE_HEIGHT * SPRITE_SCALE * HITBOX_SCALE;
+    const int Y_TOP_BOUND = globals::GAME_HEIGHT + Y_BOT_BOUND;
 }
 
 Enemy::Enemy(Graphics* _graphics, const Vector2<int>& _spawn) :
     Sprite(_graphics, ENEMY_SPRITE, SPRITE_WIDTH, SPRITE_HEIGHT, SPRITE_SCALE, _spawn)
 {
-    addAnimation("idle", 0, 0, 5);
-    hitbox.r = SPRITE_WIDTH * SPRITE_SCALE / 2;
+    addAnimation("idle", 0, 9, 5);
+    hitbox.r = SPRITE_WIDTH * SPRITE_SCALE * HITBOX_SCALE;
 }
 
 Enemy::~Enemy() {
@@ -39,15 +44,14 @@ void Enemy::update(const Vector2<int>* player) {
     position.x += velocity.x;
     position.y += velocity.y;
 
-    if (position.x >= globals::GAME_WIDTH - SPRITE_WIDTH * SPRITE_SCALE ||
+    if (position.x >= X_TOP_BOUND ||
         position.x <= 0) {
         velocity.x *= -0.3;
     }
-    if (position.y >= globals::GAME_HEIGHT - SPRITE_WIDTH * SPRITE_SCALE ||
+    if (position.y >= Y_TOP_BOUND ||
         position.y <= 0) {
         velocity.y *= -0.3;
     }
-    printf("Enemy at (%d, %d)", position.x, position.y);
 
     position.x = clamp(round(position.x + velocity.x), 0.0, globals::GAME_WIDTH - SPRITE_WIDTH * SPRITE_SCALE);
     position.y = clamp(round(position.y + velocity.y), 0.0, globals::GAME_HEIGHT - SPRITE_HEIGHT * SPRITE_SCALE);
