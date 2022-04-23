@@ -72,10 +72,12 @@ void Enemy::hit(const Vector2<int>* pPos) {
 }
 
 void Enemy::gotHit(const Vector2<int>* wPos, int damage) {
-    if (damage == 4) died();
-    else if (hitTimer == 0) {
-        velocity.x = (center.x - wPos->x) * KNOCKBACK_CONST;
-        velocity.y = (center.y - wPos->y) * KNOCKBACK_CONST;
+    velocity.x = (center.x - wPos->x) * KNOCKBACK_CONST;
+    velocity.y = (center.y - wPos->y) * KNOCKBACK_CONST;
+    if (damage == 4) {
+        died();
+    }
+    else {
         hitTimer = 50;
     }
 }

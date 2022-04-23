@@ -78,10 +78,10 @@ void Game::gameLoop() {
 
         player.update();
         player.draw();
-        weapon.update(player.getCenter());
-        weapon.draw();
         test.update(player.getCenter());
         test.draw();
+        weapon.update(player.getCenter());
+        weapon.draw();
 
         graphics.drawLine(player.getCenter(), weapon.getCenter());
         graphics.drawLine(weapon.getCenter(), test.getCenter());
