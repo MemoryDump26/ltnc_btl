@@ -19,4 +19,5 @@ Chuyển thành:
 ### Game:
 Sử dụng WASD để di chuyển ô vuông.
 Space để nhảy.
-Chuột trái để bắn.
+Kẻ địch sẽ nhắm tới bạn, dùng chuột di chuyển vũ khí để đỡ.
+Khi đỡ được 3 lần, có thể sử dụng chuột trái để bắn.
