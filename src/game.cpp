@@ -83,6 +83,9 @@ void Game::gameLoop() {
         test.update(player.getCenter());
         test.draw();
 
+        graphics.drawLine(player.getCenter(), weapon.getCenter());
+        graphics.drawLine(weapon.getCenter(), test.getCenter());
+
         if (colliding(test.hitbox, player.hitbox)) {
             test.hit(player.getCenter());
             player.gotHit(20);

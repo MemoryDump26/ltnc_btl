@@ -13,6 +13,7 @@ public:
     void hit(const Vector2<int>* pPos);
     void gotHit(const Vector2<int>* wPos, int damage);
     void died();
+    Vector2<int>* getCenter();
     Circle hitbox;
 private:
     Vector2<double> friction;
