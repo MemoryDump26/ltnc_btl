@@ -14,7 +14,7 @@ class Sprite {
 public:
     Sprite();
     Sprite(
-            Graphics* _graphics, const char path[], int _frameW, int _frameH,
+            Graphics* _graphics, SDL_Texture* _spritesheet, int _frameW, int _frameH,
             double scaler, const Vector2<int>& _spawn
           );
     ~Sprite();
@@ -26,15 +26,15 @@ protected:
     Vector2<int> position;
     Vector2<int> center;
     Vector2<int> offset;
-    Graphics* graphics;
 
 private:
+    Graphics* graphics;
     int frameW;
     int frameH;
     int scaledW;
     int scaledH;
-    size_t frameIndex;
-    int cooldown;
+    size_t frameIndex = 0;
+    int cooldown = 0;
     SDL_Texture* spritesheet;
     std::string currAnimation;
     std::map<std::string, std::vector<SDL_Rect>> animations;

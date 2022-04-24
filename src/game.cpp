@@ -15,27 +15,48 @@
 #include <ctime>
 #include <iostream>
 
+namespace {
+    std::vector<std::pair<std::string, std::string>> path {
+        {"player", "assets/sprites/character_debug.png"},
+        {"weapon", "assets/sprites/weapon.png"},
+        {"enemy", "assets/sprites/enemy.png"},
+        {"hiteffect", "assets/sprites/hiteffect.png"},
+    };
+}
+
 Game::Game() {
     SDL_Init(SDL_INIT_EVERYTHING);
     IMG_Init(IMG_INIT_PNG);
     TTF_Init();
+    loadTexture();
     gameLoop();
 }
 
 Game::~Game() {
+    unloadTexture();
     TTF_Quit();
     IMG_Quit();
     SDL_Quit();
 }
 
+void Game::loadTexture() {
+    for (size_t i = 0; i < path.size(); i++) {
+        textures[path[i].first] = graphics.loadTexture(path[i].second);
+    }
+}
+
+void Game::unloadTexture() {
+    for (size_t i = 0; i < path.size(); i++) {
+        SDL_DestroyTexture(textures[path[i].first]);
+    }
+}
+
 void Game::gameLoop() {
     std::srand(std::time(0));
-    Graphics graphics;
-    Inputs inputs;
-    Player player(&graphics, {0, 0});
-    Weapon weapon(&graphics, {0, 0});
+    Player player(&graphics, textures["player"], {0, 0});
+    Weapon weapon(&graphics, textures["weapon"], {0, 0});
     TextBox text(&graphics, "assets/fonts/iosevka-regular.ttc", 20);
-    Enemy test(&graphics, {1000, 0});
+    Enemy test(&graphics, textures["enemy"], {1000, 0});
     SDL_Color color = {255, 255, 255, 255};
     Timer timePassed;
     timePassed.start();
@@ -83,8 +104,10 @@ void Game::gameLoop() {
         weapon.update(player.getCenter());
         weapon.draw();
 
+        SDL_SetRenderDrawColor(graphics.getRenderer(), 255, 255, 255, SDL_ALPHA_OPAQUE);
         graphics.drawLine(player.getCenter(), weapon.getCenter());
         graphics.drawLine(weapon.getCenter(), test.getCenter());
+        SDL_SetRenderDrawColor(graphics.getRenderer(), 0, 0, 0, SDL_ALPHA_OPAQUE);
 
         if (colliding(test.hitbox, player.hitbox)) {
             test.hit(player.getCenter());
@@ -100,7 +123,6 @@ void Game::gameLoop() {
 
         quit = inputs.quitting();
 
-        SDL_SetRenderDrawColor(graphics.getRenderer(), 0, 0, 0, SDL_ALPHA_OPAQUE);
 
         Uint64 endTick = SDL_GetTicks64();
         Uint64 elapsedTime = endTick - startTick;

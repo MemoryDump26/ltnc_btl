@@ -9,22 +9,21 @@ Sprite::Sprite() {
 }
 
 Sprite::Sprite(
-        Graphics* _graphics, const char path[], int _frameW, int _frameH,
+        Graphics* _graphics, SDL_Texture* _spritesheet, int _frameW, int _frameH,
         double scaler, const Vector2<int>& _spawn
         ) :
+    position {_spawn},
     offset{
         static_cast<int>(_frameW * scaler / 2),
-        static_cast<int>(_frameH* scaler / 2)
+        static_cast<int>(_frameH * scaler / 2)
     },
     graphics {_graphics},
     frameW  {_frameW},
     frameH {_frameH},
-    position {_spawn}
+    spritesheet {_spritesheet}
 {
-    spritesheet = graphics->loadTexture(path);
     scaledW = frameW * scaler;
     scaledH = frameH * scaler;
-    frameIndex = 0;
 }
 
 void Sprite::addAnimation(std::string animation, size_t start, size_t end, size_t _speed) {
@@ -63,5 +62,4 @@ void Sprite::draw() {
 Sprite::~Sprite() {
 
 }
-
 

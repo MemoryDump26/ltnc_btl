@@ -5,7 +5,6 @@
 #include <SDL2/SDL.h>
 
 namespace {
-    const char PLAYER_SPRITE[] = "assets/sprites/character_debug.png";
     const int SPRITE_WIDTH = 250;
     const int SPRITE_HEIGHT = 500;
     const double SPRITE_SCALE = 0.25;
@@ -24,8 +23,8 @@ enum Direction {
     RIGHT,
 };
 
-Player::Player(Graphics* _graphics, Vector2<int> _spawn) :
-    Sprite(_graphics, PLAYER_SPRITE, SPRITE_WIDTH, SPRITE_HEIGHT, SPRITE_SCALE, _spawn)
+Player::Player(Graphics* _graphics, SDL_Texture* _spritesheet, Vector2<int> _spawn) :
+    Sprite(_graphics, _spritesheet, SPRITE_WIDTH, SPRITE_HEIGHT, SPRITE_SCALE, _spawn)
 {
     /*addAnimation("idle", 0, 1, 10);
     addAnimation("run", 0, 9, 5);*/

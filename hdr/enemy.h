@@ -7,7 +7,7 @@
 
 class Enemy : public Sprite {
 public:
-    Enemy(Graphics* _graphics, const Vector2<int>& _spawn);
+    Enemy(Graphics* _graphics, SDL_Texture* _spritesheet, const Vector2<int>& _spawn);
     ~Enemy();
     void update(const Vector2<int>* player);
     void hit(const Vector2<int>* pPos);

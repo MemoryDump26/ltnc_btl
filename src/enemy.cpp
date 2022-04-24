@@ -5,7 +5,6 @@
 #include "vector2d.h"
 
 namespace {
-    const char ENEMY_SPRITE[] = "assets/sprites/enemy.png";
     const int SPRITE_WIDTH = 1000;
     const int SPRITE_HEIGHT = 1000;
     const double SPRITE_SCALE = 0.2;
@@ -21,8 +20,8 @@ namespace {
         globals::GAME_HEIGHT - (SPRITE_HEIGHT * SPRITE_SCALE) * (1 + HITBOX_SCALE) / 2;
 }
 
-Enemy::Enemy(Graphics* _graphics, const Vector2<int>& _spawn) :
-    Sprite(_graphics, ENEMY_SPRITE, SPRITE_WIDTH, SPRITE_HEIGHT, SPRITE_SCALE, _spawn)
+Enemy::Enemy(Graphics* _graphics, SDL_Texture* _spritesheet, const Vector2<int>& _spawn) :
+    Sprite(_graphics, _spritesheet, SPRITE_WIDTH, SPRITE_HEIGHT, SPRITE_SCALE, _spawn)
 {
     addAnimation("idle", 0, 9, 5);
     hitbox.r = SPRITE_WIDTH * SPRITE_SCALE / 2 * HITBOX_SCALE;
