@@ -22,5 +22,5 @@ run:
 
 .PHONY: clean
 clean:
-	rm game
 	rm src/*.o
+	rm game

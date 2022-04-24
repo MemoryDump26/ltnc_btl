@@ -8,6 +8,7 @@
 #include "enemy.h"
 #include "area2d.h"
 #include "timer.h"
+#include "utils.h"
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_keycode.h>
@@ -16,11 +17,55 @@
 #include <iostream>
 
 namespace {
-    std::vector<std::pair<std::string, std::string>> path {
-        {"player", "assets/sprites/character_debug.png"},
-        {"weapon", "assets/sprites/weapon.png"},
-        {"enemy", "assets/sprites/enemy.png"},
-        {"hiteffect", "assets/sprites/hiteffect.png"},
+    std::map<std::string, TextureData> data {
+        {
+            "player",
+            {
+                "assets/sprites/character_debug.png",
+                250,
+                500,
+                0.25,
+                {
+                    {"idle", 0, 0, 1},
+                },
+            },
+        },
+        {
+            "weapon",
+            {
+                "assets/sprites/weapon.png",
+                1000,
+                1000,
+                0.2,
+                {
+                    {"idle", 0, 9, 2},
+                },
+            },
+        },
+        {
+            "enemy",
+            {
+                "assets/sprites/enemy.png",
+                1000,
+                1000,
+                0.2,
+                {
+                    {"idle", 0, 9, 2},
+                },
+            },
+        },
+        {
+            "hiteffect",
+            {
+                "assets/sprites/hiteffect.png",
+                1000,
+                1000,
+                1,
+                {
+                    {"hit", 0, 19, 3},
+                },
+            },
+        },
     };
 }
 
@@ -40,23 +85,24 @@ Game::~Game() {
 }
 
 void Game::loadTexture() {
-    for (size_t i = 0; i < path.size(); i++) {
-        textures[path[i].first] = graphics.loadTexture(path[i].second);
+    for (auto& i : data) {
+        i.second.spritesheet = graphics.loadTexture(i.second.path);
     }
 }
 
 void Game::unloadTexture() {
-    for (size_t i = 0; i < path.size(); i++) {
-        SDL_DestroyTexture(textures[path[i].first]);
+    for (auto& i : data) {
+        SDL_DestroyTexture(i.second.spritesheet);
+        i.second.spritesheet = nullptr;
     }
 }
 
 void Game::gameLoop() {
     std::srand(std::time(0));
-    Player player(&graphics, textures["player"], {0, 0});
-    Weapon weapon(&graphics, textures["weapon"], {0, 0});
+    Player player(&graphics, data.at("player").spritesheet, {0, 0});
+    Weapon weapon(&graphics, data.at("weapon").spritesheet, {0, 0});
     TextBox text(&graphics, "assets/fonts/iosevka-regular.ttc", 20);
-    Enemy test(&graphics, textures["enemy"], {1000, 0});
+    Enemy test(&graphics, data.at("enemy").spritesheet, {1000, 0});
     SDL_Color color = {255, 255, 255, 255};
     Timer timePassed;
     timePassed.start();
