@@ -26,7 +26,9 @@ namespace {
                 500,
                 0.25,
                 {
+                    {"default", 0, 0, 1},
                     {"idle", 0, 0, 1},
+                    {"run", 0, 0, 1},
                 },
             },
         },
@@ -38,6 +40,7 @@ namespace {
                 1000,
                 0.2,
                 {
+                    {"default", 0, 9, 2},
                     {"idle", 0, 9, 2},
                 },
             },
@@ -50,6 +53,7 @@ namespace {
                 1000,
                 0.2,
                 {
+                    {"default", 0, 9, 2},
                     {"idle", 0, 9, 2},
                 },
             },
@@ -62,7 +66,7 @@ namespace {
                 1000,
                 1,
                 {
-                    {"hit", 0, 19, 3},
+                    {"default", 0, 19, 3},
                 },
             },
         },
@@ -99,9 +103,9 @@ void Game::unloadTexture() {
 
 void Game::gameLoop() {
     std::srand(std::time(0));
-    Player player(&graphics, data.at("player"), {0, 0});
-    Weapon weapon(&graphics, data.at("weapon"), {0, 0});
-    Enemy test(&graphics, data.at("enemy"), {1500, 0});
+    Player player(&graphics, &data.at("player"), {0, 0});
+    Weapon weapon(&graphics, &data.at("weapon"), {0, 0});
+    Enemy test(&graphics, &data.at("enemy"), {1500, 0});
     TextBox text(&graphics, "assets/fonts/iosevka-regular.ttc", 20);
     SDL_Color color = {255, 255, 255, 255};
     Timer timePassed;

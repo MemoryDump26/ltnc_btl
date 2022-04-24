@@ -6,18 +6,18 @@
 #include <string>
 
 struct AnimationData {
-    std::string name;
-    int start;
-    int end;
-    int fps;
+    const std::string name;
+    const int start;
+    const int end;
+    const int fps;
 };
 
 struct TextureData {
-    std::string path;
-    int width;
-    int height;
-    double scale;
-    std::vector<AnimationData> animation;
+    const std::string path;
+    const int width;
+    const int height;
+    const double scale;
+    const std::vector<AnimationData> animation;
     SDL_Texture* spritesheet = nullptr;
 };
 

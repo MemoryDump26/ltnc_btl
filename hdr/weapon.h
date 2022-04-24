@@ -9,7 +9,7 @@ class Graphics;
 
 class Weapon : public Sprite{
 public:
-    Weapon(Graphics* _graphics, const TextureData& data, const Vector2<int>& _spawn);
+    Weapon(Graphics* _graphics, TextureData* data, const Vector2<int>& _spawn);
     ~Weapon();
     void update(const Vector2<int>* player);
     void fire();

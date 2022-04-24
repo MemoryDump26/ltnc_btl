@@ -24,11 +24,11 @@ enum Direction {
 };
 
 
-Player::Player(Graphics* _graphics, const TextureData& data, Vector2<int> _spawn) :
+Player::Player(Graphics* _graphics, TextureData* data, Vector2<int> _spawn) :
     Sprite(_graphics, data, _spawn)
 {
-    addAnimation("idle", 0, 0, 1);
-    addAnimation("run", 0, 0, 1);
+    //addAnimation("idle", 0, 0, 1);
+    //addAnimation("run", 0, 0, 1);
     health = MAX_HEALTH;
     hitbox.w = SPRITE_WIDTH * SPRITE_SCALE;
     hitbox.h = SPRITE_HEIGHT * SPRITE_SCALE;

@@ -14,10 +14,10 @@ namespace {
     const int PROJECTILE_VELOCITY = 3;
 }
 
-Weapon::Weapon(Graphics* _graphics, const TextureData& data, const Vector2<int>& _spawn) :
+Weapon::Weapon(Graphics* _graphics, TextureData* data, const Vector2<int>& _spawn) :
     Sprite(_graphics, data, _spawn)
 {
-    addAnimation("idle", 0, 9, 2);
+    //addAnimation("idle", 0, 9, 2);
     hitbox.r = SPRITE_WIDTH * SPRITE_SCALE / 2 * HITBOX_SCALE;
 }
 Weapon::~Weapon() {

@@ -20,10 +20,10 @@ namespace {
         globals::GAME_HEIGHT - (SPRITE_HEIGHT * SPRITE_SCALE) * (1 + HITBOX_SCALE) / 2;
 }
 
-Enemy::Enemy(Graphics* _graphics, const TextureData& data, const Vector2<int>& _spawn) :
+Enemy::Enemy(Graphics* _graphics, TextureData* data, const Vector2<int>& _spawn) :
     Sprite(_graphics, data, _spawn)
 {
-    addAnimation("idle", 0, 9, 5);
+    //addAnimation("idle", 0, 9, 5);
     hitbox.r = SPRITE_WIDTH * SPRITE_SCALE / 2 * HITBOX_SCALE;
 }
 
