@@ -23,15 +23,13 @@ enum Direction {
     RIGHT,
 };
 
-Player::Player(Graphics* _graphics, SDL_Texture* _spritesheet, Vector2<int> _spawn) :
-    Sprite(_graphics, _spritesheet, SPRITE_WIDTH, SPRITE_HEIGHT, SPRITE_SCALE, _spawn)
+
+Player::Player(Graphics* _graphics, const TextureData& data, Vector2<int> _spawn) :
+    Sprite(_graphics, data, _spawn)
 {
-    /*addAnimation("idle", 0, 1, 10);
-    addAnimation("run", 0, 9, 5);*/
     addAnimation("idle", 0, 0, 1);
     addAnimation("run", 0, 0, 1);
     health = MAX_HEALTH;
-    //hitbox = new SDL_Rect {0, 0, 125, 250};
     hitbox.w = SPRITE_WIDTH * SPRITE_SCALE;
     hitbox.h = SPRITE_HEIGHT * SPRITE_SCALE;
     iframe = 0;

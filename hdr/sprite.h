@@ -2,6 +2,7 @@
 #define SPRITE_H
 
 #include "vector2d.h"
+#include "utils.h"
 #include <map>
 #include <string>
 #include <vector>
@@ -13,10 +14,7 @@ class SDL_Rect;
 class Sprite {
 public:
     Sprite();
-    Sprite(
-            Graphics* _graphics, SDL_Texture* _spritesheet, int _frameW, int _frameH,
-            double scaler, const Vector2<int>& _spawn
-          );
+    Sprite(Graphics* _graphics, const TextureData& data, const Vector2<int>& _spawn);
     ~Sprite();
     void addAnimation(std::string name, size_t start, size_t end, size_t _speed);
     void setAnimation(std::string name);

@@ -6,7 +6,7 @@
 
 class Player : public Sprite{
 public:
-    Player(Graphics* _graphics, SDL_Texture* _spritesheet, Vector2<int> _position);
+    Player(Graphics* _graphics, const TextureData& data, Vector2<int> _position);
     ~Player();
     void update();
     void moveLeft();

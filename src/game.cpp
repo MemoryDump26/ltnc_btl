@@ -99,10 +99,10 @@ void Game::unloadTexture() {
 
 void Game::gameLoop() {
     std::srand(std::time(0));
-    Player player(&graphics, data.at("player").spritesheet, {0, 0});
-    Weapon weapon(&graphics, data.at("weapon").spritesheet, {0, 0});
+    Player player(&graphics, data.at("player"), {0, 0});
+    Weapon weapon(&graphics, data.at("weapon"), {0, 0});
+    Enemy test(&graphics, data.at("enemy"), {1500, 0});
     TextBox text(&graphics, "assets/fonts/iosevka-regular.ttc", 20);
-    Enemy test(&graphics, data.at("enemy").spritesheet, {1000, 0});
     SDL_Color color = {255, 255, 255, 255};
     Timer timePassed;
     timePassed.start();
