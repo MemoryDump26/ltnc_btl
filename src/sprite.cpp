@@ -52,6 +52,10 @@ void Sprite::addAnimation(std::string animation, size_t start, size_t end, size_
     if (currAnimation == "") currAnimation = animation;
 }
 
+void Sprite::offsetPosition() {
+    position -= offset;
+}
+
 void Sprite::setAnimation(std::string name) {
     if (currAnimation != name) {
         currAnimation = name;
@@ -71,6 +75,21 @@ void Sprite::draw() {
     }
     else cooldown--;
 }
+
+bool Sprite::drawOnce() {
+    SDL_Rect destination = {position.x, position.y, scaledW, scaledH};
+
+    graphics->draw(spritesheet, &animations[currAnimation][frameIndex], &destination);
+
+    if (cooldown == 0) {
+        frameIndex = (frameIndex + 1);
+        cooldown = speed[currAnimation];
+    }
+    else cooldown--;
+    if (frameIndex >= numOfFrame[currAnimation]) return false;
+    else return true;
+}
+
 
 Sprite::~Sprite() {
 

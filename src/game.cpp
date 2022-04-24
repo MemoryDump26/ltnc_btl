@@ -8,6 +8,7 @@
 #include "enemy.h"
 #include "area2d.h"
 #include "timer.h"
+#include "effects.h"
 #include "utils.h"
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
@@ -38,7 +39,7 @@ namespace {
                 "assets/sprites/weapon.png",
                 1000,
                 1000,
-                0.2,
+                0.4,
                 {
                     {"default", 0, 9, 2},
                     {"idle", 0, 9, 2},
@@ -64,9 +65,9 @@ namespace {
                 "assets/sprites/hiteffect.png",
                 1000,
                 1000,
-                1,
+                0.5,
                 {
-                    {"default", 0, 19, 3},
+                    {"default", 0, 19, 1},
                 },
             },
         },
@@ -106,7 +107,9 @@ void Game::gameLoop() {
     Player player(&graphics, &data.at("player"), {0, 0});
     Weapon weapon(&graphics, &data.at("weapon"), {0, 0});
     Enemy test(&graphics, &data.at("enemy"), {1500, 0});
-    TextBox text(&graphics, "assets/fonts/iosevka-regular.ttc", 20);
+    Enemy test2(&graphics, &data.at("enemy"), {1700, 400});
+    Effects effects(&graphics);
+    TextBox text(&graphics, "assets/fonts/iosevka-regular.ttc", 40);
     SDL_Color color = {255, 255, 255, 255};
     Timer timePassed;
     timePassed.start();
@@ -151,12 +154,15 @@ void Game::gameLoop() {
         player.draw();
         test.update(player.getCenter());
         test.draw();
+        test2.update(player.getCenter());
+        test2.draw();
         weapon.update(player.getCenter());
         weapon.draw();
 
         SDL_SetRenderDrawColor(graphics.getRenderer(), 255, 255, 255, SDL_ALPHA_OPAQUE);
         graphics.drawLine(player.getCenter(), weapon.getCenter());
         graphics.drawLine(weapon.getCenter(), test.getCenter());
+        graphics.drawLine(weapon.getCenter(), test2.getCenter());
         SDL_SetRenderDrawColor(graphics.getRenderer(), 0, 0, 0, SDL_ALPHA_OPAQUE);
 
         if (colliding(test.hitbox, player.hitbox)) {
@@ -165,11 +171,26 @@ void Game::gameLoop() {
             std::cout << "hit! " << player.getHealth() << " HP left\n";
         }
 
+        if (colliding(test2.hitbox, player.hitbox)) {
+            test2.hit(player.getCenter());
+            player.gotHit(20);
+            std::cout << "hit! " << player.getHealth() << " HP left\n";
+        }
+
         if (colliding(weapon.hitbox, test.hitbox)) {
             weapon.hit();
             test.gotHit(weapon.getCenter(), weapon.getPower());
+            effects.spawn(&data.at("hiteffect"), test.getCenter());
             std::cout << "enemy hit!\n";
         }
+
+        if (colliding(weapon.hitbox, test2.hitbox)) {
+            weapon.hit();
+            test2.gotHit(weapon.getCenter(), weapon.getPower());
+            effects.spawn(&data.at("hiteffect"), test2.getCenter());
+            std::cout << "enemy hit!\n";
+        }
+        effects.update();
 
         quit = inputs.quitting();
 
@@ -180,9 +201,9 @@ void Game::gameLoop() {
         // Look at this mess lmao
         /*char* elapsedText = new char[10];
         sprintf(elapsedText, "%d", player.getHealth());*/
-        //const char* elapsedText = timePassed.getTimeHuman().c_str();
-        char* elapsedText = new char[10];
-        sprintf(elapsedText, "%d", timePassed.getTime());
+        const char* elapsedText = timePassed.getTimeHuman().c_str();
+        //char* elapsedText = new char[10];
+        //sprintf(elapsedText, "%s", timePassed.getTimeHuman());
         text.update(elapsedText, &color);
         text.draw();
         graphics.present();

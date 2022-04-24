@@ -18,8 +18,10 @@ public:
     ~Sprite();
     void addAnimation(std::string name, size_t start, size_t end, size_t _speed);
     void addAnimation();
+    void offsetPosition();
     void setAnimation(std::string name);
     void draw();
+    bool drawOnce();
 
 protected:
     TextureData* d;

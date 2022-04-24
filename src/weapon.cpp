@@ -10,8 +10,8 @@ namespace {
     const int SPRITE_HEIGHT = 1000;
     const double SPRITE_SCALE = 0.2;
     const double HITBOX_SCALE = 0.333;
-    const int WEAPON_DISTANCE = 200;
-    const int PROJECTILE_VELOCITY = 3;
+    const int WEAPON_DISTANCE = 300;
+    const int PROJECTILE_VELOCITY = 2;
 }
 
 Weapon::Weapon(Graphics* _graphics, TextureData* data, const Vector2<int>& _spawn) :

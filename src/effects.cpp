@@ -1,0 +1,21 @@
+#include "effects.h"
+
+Effects::Effects(Graphics* _graphics) :
+    graphics {_graphics}
+{}
+Effects::~Effects() {}
+
+void Effects::spawn(TextureData* data, const Vector2<int>* _position) {
+    Sprite* tmp = new Sprite(graphics, data, *_position);
+    tmp->offsetPosition();
+    fxList.push_back(tmp);
+}
+
+void Effects::update() {
+    for (size_t i = 0; i < fxList.size(); i++) {
+        if (fxList[i]->drawOnce() == false) {
+            delete fxList[i];
+            fxList.erase(fxList.begin()+i);
+        }
+    }
+}
