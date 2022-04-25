@@ -63,31 +63,39 @@ void Sprite::setAnimation(std::string name) {
     }
 }
 
-void Sprite::draw() {
-
-    SDL_Rect destination = {position.x, position.y, scaledW, scaledH};
-
-    graphics->draw(spritesheet, &animations[currAnimation][frameIndex], &destination);
-
-    if (cooldown == 0) {
-        frameIndex = (frameIndex + 1) % numOfFrame[currAnimation];
-        cooldown = speed[currAnimation];
-    }
-    else cooldown--;
+void Sprite::looping(bool _looping) {
+    loop = _looping;
 }
 
-bool Sprite::drawOnce() {
-    SDL_Rect destination = {position.x, position.y, scaledW, scaledH};
+bool Sprite::draw() {
+    if (paused == true) return false;
+    else {
+        SDL_Rect destination = {position.x, position.y, scaledW, scaledH};
 
-    graphics->draw(spritesheet, &animations[currAnimation][frameIndex], &destination);
+        graphics->draw(spritesheet, &animations[currAnimation][frameIndex], &destination);
 
-    if (cooldown == 0) {
-        frameIndex = (frameIndex + 1);
-        cooldown = speed[currAnimation];
+        if (cooldown == 0) {
+            frameIndex = (frameIndex + 1);
+            cooldown = speed[currAnimation];
+        }
+        else cooldown--;
+        if (frameIndex >= numOfFrame[currAnimation]) {
+            frameIndex = 0;
+            if (loop == false) {
+                pause();
+                return false;
+            }
+        }
+        return true;
     }
-    else cooldown--;
-    if (frameIndex >= numOfFrame[currAnimation]) return false;
-    else return true;
+}
+
+void Sprite::pause() {
+    paused = true;
+}
+
+void Sprite::resume() {
+    paused = false;
 }
 
 

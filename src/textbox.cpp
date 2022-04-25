@@ -17,7 +17,6 @@ TextBox::~TextBox () {
 
 void TextBox::update(std::string text, SDL_Color* color) {
     SDL_Surface* tmp = TTF_RenderText_Blended(font, text.c_str(), *color);
-    SDL_DestroyTexture(output);
     output = SDL_CreateTextureFromSurface(graphics->getRenderer(), tmp);
     SDL_FreeSurface(tmp);
 
@@ -29,5 +28,6 @@ void TextBox::draw() {
     SDL_Rect* src = new SDL_Rect {0, 0, textureW, textureH};
     SDL_Rect* dest = new SDL_Rect {position.x, position.y, textureW, textureH};
     graphics->draw(output, src, dest);
+    SDL_DestroyTexture(output);
 }
 

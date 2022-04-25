@@ -23,7 +23,6 @@ namespace {
 Enemy::Enemy(Graphics* _graphics, TextureData* data, const Vector2<int>& _spawn) :
     Sprite(_graphics, data, _spawn)
 {
-    //addAnimation("idle", 0, 9, 5);
     hitbox.r = SPRITE_WIDTH * SPRITE_SCALE / 2 * HITBOX_SCALE;
 }
 
@@ -40,6 +39,11 @@ void Enemy::update(const Vector2<int>* player) {
         acceleration *= 0.01;
         friction *= 0.5;
         hitTimer--;
+    }
+    else {
+        looping(true);
+        resume();
+        setAnimation("idle");
     }
 
     velocity += acceleration + friction;
@@ -73,16 +77,19 @@ void Enemy::hit(const Vector2<int>* pPos) {
 void Enemy::gotHit(const Vector2<int>* wPos, int damage) {
     velocity.x = (center.x - wPos->x) * KNOCKBACK_CONST;
     velocity.y = (center.y - wPos->y) * KNOCKBACK_CONST;
-    if (damage == 4) {
+    if (damage == -1) {
+        hitTimer = 50;
         died();
     }
     else {
         hitTimer = 50;
+        setAnimation("hit");
     }
 }
 
 void Enemy::died() {
-    //setAnimation("died");
+    looping(false);
+    setAnimation("died");
 }
 
 Vector2<int>* Enemy::getCenter() {

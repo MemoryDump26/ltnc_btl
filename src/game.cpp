@@ -56,6 +56,8 @@ namespace {
                 {
                     {"default", 0, 9, 2},
                     {"idle", 0, 9, 2},
+                    {"hit", 10, 11, 2},
+                    {"died", 12, 24, 2},
                 },
             },
         },
@@ -107,7 +109,6 @@ void Game::gameLoop() {
     Player player(&graphics, &data.at("player"), {0, 0});
     Weapon weapon(&graphics, &data.at("weapon"), {0, 0});
     Enemy test(&graphics, &data.at("enemy"), {1500, 0});
-    Enemy test2(&graphics, &data.at("enemy"), {1700, 400});
     Effects effects(&graphics);
     TextBox text(&graphics, "assets/fonts/iosevka-regular.ttc", 40);
     SDL_Color color = {255, 255, 255, 255};
@@ -154,25 +155,16 @@ void Game::gameLoop() {
         player.draw();
         test.update(player.getCenter());
         test.draw();
-        test2.update(player.getCenter());
-        test2.draw();
         weapon.update(player.getCenter());
         weapon.draw();
 
         SDL_SetRenderDrawColor(graphics.getRenderer(), 255, 255, 255, SDL_ALPHA_OPAQUE);
         graphics.drawLine(player.getCenter(), weapon.getCenter());
         graphics.drawLine(weapon.getCenter(), test.getCenter());
-        graphics.drawLine(weapon.getCenter(), test2.getCenter());
         SDL_SetRenderDrawColor(graphics.getRenderer(), 0, 0, 0, SDL_ALPHA_OPAQUE);
 
         if (colliding(test.hitbox, player.hitbox)) {
             test.hit(player.getCenter());
-            player.gotHit(20);
-            std::cout << "hit! " << player.getHealth() << " HP left\n";
-        }
-
-        if (colliding(test2.hitbox, player.hitbox)) {
-            test2.hit(player.getCenter());
             player.gotHit(20);
             std::cout << "hit! " << player.getHealth() << " HP left\n";
         }
@@ -184,12 +176,6 @@ void Game::gameLoop() {
             std::cout << "enemy hit!\n";
         }
 
-        if (colliding(weapon.hitbox, test2.hitbox)) {
-            weapon.hit();
-            test2.gotHit(weapon.getCenter(), weapon.getPower());
-            effects.spawn(&data.at("hiteffect"), test2.getCenter());
-            std::cout << "enemy hit!\n";
-        }
         effects.update();
 
         quit = inputs.quitting();

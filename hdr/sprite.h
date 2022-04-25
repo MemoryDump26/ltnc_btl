@@ -20,7 +20,10 @@ public:
     void addAnimation();
     void offsetPosition();
     void setAnimation(std::string name);
-    void draw();
+    void looping(bool _looping);
+    void pause();
+    void resume();
+    bool draw();
     bool drawOnce();
 
 protected:
@@ -37,6 +40,8 @@ private:
     int scaledH;
     int frameIndex = 0;
     int cooldown = 0;
+    bool loop = true;
+    bool paused = false;
     SDL_Texture* spritesheet;
     std::string currAnimation = "default";
     std::map<std::string, std::vector<SDL_Rect>> animations;
