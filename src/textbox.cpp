@@ -6,17 +6,18 @@ TextBox::TextBox () {
 
 }
 
-TextBox::TextBox(Graphics* _graphics, const char* path, int size) {
+TextBox::TextBox(Graphics* _graphics, std::string path, int size) {
     graphics = _graphics;
-    font = TTF_OpenFont(path, size);
+    font = TTF_OpenFont(path.c_str(), size);
 }
 
 TextBox::~TextBox () {
     TTF_CloseFont(font);
 }
 
-void TextBox::update(const char *text, SDL_Color* color) {
-    SDL_Surface* tmp = TTF_RenderText_Blended(font, text, *color);
+void TextBox::update(std::string text, SDL_Color* color) {
+    SDL_Surface* tmp = TTF_RenderText_Blended(font, text.c_str(), *color);
+    SDL_DestroyTexture(output);
     output = SDL_CreateTextureFromSurface(graphics->getRenderer(), tmp);
     SDL_FreeSurface(tmp);
 

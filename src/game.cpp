@@ -194,17 +194,10 @@ void Game::gameLoop() {
 
         quit = inputs.quitting();
 
-
         Uint64 endTick = SDL_GetTicks64();
         Uint64 elapsedTime = endTick - startTick;
 
-        // Look at this mess lmao
-        /*char* elapsedText = new char[10];
-        sprintf(elapsedText, "%d", player.getHealth());*/
-        const char* elapsedText = timePassed.getTimeHuman().c_str();
-        //char* elapsedText = new char[10];
-        //sprintf(elapsedText, "%s", timePassed.getTimeHuman());
-        text.update(elapsedText, &color);
+        text.update(timePassed.getTimeHuman(), &color);
         text.draw();
         graphics.present();
         SDL_Delay((1000 / globals::GAME_FPS) - elapsedTime);

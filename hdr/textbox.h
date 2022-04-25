@@ -3,15 +3,16 @@
 
 #include "vector2d.h"
 #include <SDL2/SDL_ttf.h>
+#include <string>
 
 class Graphics;
 
 class TextBox {
 public:
     TextBox();
-    TextBox(Graphics* _graphics, const char* path, int size);
+    TextBox(Graphics* _graphics, std::string path, int size);
     ~TextBox();
-    void update(const char* text, SDL_Color* color);
+    void update(std::string text, SDL_Color* color);
     void draw();
 
 private:
