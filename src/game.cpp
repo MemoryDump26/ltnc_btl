@@ -2,20 +2,25 @@
 #include "globals.h"
 #include "graphics.h"
 #include "inputs.h"
+
 #include "player.h"
 #include "weapon.h"
-#include "textbox.h"
 #include "enemy.h"
-#include "area2d.h"
+#include "textbox.h"
 #include "timer.h"
 #include "effects.h"
+
+#include "area2d.h"
 #include "utils.h"
+
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
-#include <SDL2/SDL_keycode.h>
 #include <SDL2/SDL_ttf.h>
+
 #include <ctime>
 #include <iostream>
+#include <map>
+#include <string>
 
 namespace {
     std::map<std::string, TextureData> data {

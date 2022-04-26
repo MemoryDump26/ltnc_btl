@@ -1,4 +1,5 @@
 #include "area2d.h"
+
 #include <algorithm>
 
 Rectangle::Rectangle() {}

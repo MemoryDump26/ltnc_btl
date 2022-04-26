@@ -1,11 +1,12 @@
 #ifndef TEXTBOX_H
 #define TEXTBOX_H
 
+#include "graphics.h"
 #include "vector2d.h"
-#include <SDL2/SDL_ttf.h>
-#include <string>
 
-class Graphics;
+#include <SDL2/SDL_ttf.h>
+
+#include <string>
 
 class TextBox {
 public:

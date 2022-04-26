@@ -1,11 +1,9 @@
 #ifndef WEAPON_H
 #define WEAPON_H
 
-#include "vector2d.h"
-#include "area2d.h"
 #include "sprite.h"
-
-class Graphics;
+#include "area2d.h"
+#include "vector2d.h"
 
 class Weapon : public Sprite{
 public:

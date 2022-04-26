@@ -1,6 +1,10 @@
 #include "weapon.h"
 #include "graphics.h"
+
 #include "utils.h"
+#include "area2d.h"
+#include "vector2d.h"
+
 #include <SDL2/SDL.h>
 #include <cmath>
 
@@ -17,7 +21,6 @@ namespace {
 Weapon::Weapon(Graphics* _graphics, TextureData* data, const Vector2<int>& _spawn) :
     Sprite(_graphics, data, _spawn)
 {
-    //addAnimation("idle", 0, 9, 2);
     hitbox.r = SPRITE_WIDTH * SPRITE_SCALE / 2 * HITBOX_SCALE;
 }
 Weapon::~Weapon() {
@@ -39,7 +42,6 @@ void Weapon::update(const Vector2<int>* player) {
 
         position -= offset;
         center = position + offset;
-
     }
     else {
 

@@ -1,10 +1,12 @@
 #ifndef EFFECTS_H
 #define EFFECTS_H
 
-#include "vector2d.h"
 #include "sprite.h"
-#include <vector>
+#include "vector2d.h"
+
 #include <SDL2/SDL.h>
+
+#include <vector>
 
 class Effects {
 public:

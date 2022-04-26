@@ -1,15 +1,15 @@
 #ifndef SPRITE_H
 #define SPRITE_H
 
+#include "graphics.h"
 #include "vector2d.h"
 #include "utils.h"
-#include <map>
-#include <string>
-#include <vector>
 
-class Graphics;
-class SDL_Texture;
-class SDL_Rect;
+#include <SDL2/SDL.h>
+
+#include <map>
+#include <vector>
+#include <string>
 
 class Sprite {
 public:

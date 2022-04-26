@@ -2,6 +2,7 @@
 #define UTILS_H
 
 #include <SDL2/SDL.h>
+
 #include <vector>
 #include <string>
 
@@ -27,6 +28,5 @@ T clamp(const T value, const T low, const T high) {
     else if (value > high) return high;
     else return value;
 }
-
 
 #endif

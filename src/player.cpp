@@ -1,7 +1,11 @@
 #include "player.h"
-#include "graphics.h"
 #include "globals.h"
+#include "graphics.h"
+
 #include "utils.h"
+#include "area2d.h"
+#include "vector2d.h"
+
 #include <SDL2/SDL.h>
 
 namespace {
@@ -23,12 +27,9 @@ enum Direction {
     RIGHT,
 };
 
-
 Player::Player(Graphics* _graphics, TextureData* data, Vector2<int> _spawn) :
     Sprite(_graphics, data, _spawn)
 {
-    //addAnimation("idle", 0, 0, 1);
-    //addAnimation("run", 0, 0, 1);
     health = MAX_HEALTH;
     hitbox.w = SPRITE_WIDTH * SPRITE_SCALE;
     hitbox.h = SPRITE_HEIGHT * SPRITE_SCALE;
@@ -39,7 +40,6 @@ Player::~Player() {
 }
 
 void Player::update() {
-
     friction.x = -velocity.x * X_FRICTION_CONST;
     friction.y = -velocity.y * Y_FRICTION_CONST;
     velocity += acceleration + friction;

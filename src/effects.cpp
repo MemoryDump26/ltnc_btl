@@ -3,6 +3,7 @@
 Effects::Effects(Graphics* _graphics) :
     graphics {_graphics}
 {}
+
 Effects::~Effects() {}
 
 void Effects::spawn(TextureData* data, const Vector2<int>* _position) {

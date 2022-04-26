@@ -1,5 +1,6 @@
 #include "textbox.h"
 #include "graphics.h"
+
 #include <SDL2/SDL.h>
 
 TextBox::TextBox () {
@@ -30,4 +31,3 @@ void TextBox::draw() {
     graphics->draw(output, src, dest);
     SDL_DestroyTexture(output);
 }
-

@@ -1,7 +1,9 @@
 #include "enemy.h"
-#include "graphics.h"
-#include "utils.h"
 #include "globals.h"
+#include "graphics.h"
+
+#include "utils.h"
+#include "area2d.h"
 #include "vector2d.h"
 
 namespace {

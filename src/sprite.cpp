@@ -1,7 +1,10 @@
 #include "sprite.h"
 #include "graphics.h"
+
 #include "vector2d.h"
+
 #include <SDL2/SDL.h>
+
 #include <iostream>
 
 Sprite::Sprite() {
@@ -98,8 +101,6 @@ void Sprite::resume() {
     paused = false;
 }
 
-
 Sprite::~Sprite() {
 
 }
-

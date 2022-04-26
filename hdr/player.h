@@ -3,6 +3,7 @@
 
 #include "sprite.h"
 #include "area2d.h"
+#include "vector2d.h"
 
 class Player : public Sprite{
 public:
