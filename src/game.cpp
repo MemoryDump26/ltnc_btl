@@ -31,7 +31,7 @@ namespace {
                 "assets/sprites/character_debug.png",
                 250,
                 500,
-                0.25,
+                0.3,
                 {
                     {"default", 0, 0, 1},
                     {"idle", 0, 0, 1},
@@ -45,7 +45,7 @@ namespace {
                 "assets/sprites/weapon.png",
                 1000,
                 1000,
-                0.4,
+                0.5,
                 {
                     {"default", 0, 9, 2},
                     {"idle", 0, 9, 2},
@@ -58,7 +58,7 @@ namespace {
                 "assets/sprites/enemy.png",
                 1000,
                 1000,
-                0.2,
+                0.3,
                 {
                     {"default", 0, 9, 2},
                     {"idle", 0, 9, 2},
@@ -73,7 +73,7 @@ namespace {
                 "assets/sprites/hiteffect.png",
                 1000,
                 1000,
-                0.5,
+                0.8,
                 {
                     {"default", 0, 19, 1},
                 },
@@ -118,7 +118,8 @@ void Game::gameLoop() {
     Weapon weapon(&graphics, &data.at("weapon"), {0, 0});
     EnemyManager spawn(&graphics, &data.at("enemy"));
     Effects effects(&graphics);
-    TextBox text(&graphics, "assets/fonts/iosevka-regular.ttc", 40);
+    TTF_Font* f_iosevka = TTF_OpenFont("assets/fonts/iosevka-regular.ttc", 60);
+    TextBox text(&graphics, f_iosevka);
     SDL_Color color = {255, 255, 255, 255};
     Timer timePassed;
     timePassed.start();
@@ -177,7 +178,14 @@ void Game::gameLoop() {
         Uint64 endTick = SDL_GetTicks64();
         Uint64 elapsedTime = endTick - startTick;
 
-        text.update(timePassed.getTimeHuman(), &color);
+        color.r = rand() % 255;
+        color.g = rand() % 255;
+        color.b = rand() % 255;
+
+        text.setSize(rand() % 50 + 20);
+        text.setPosition({rand() % 1920, rand() % 1080});
+        text.setColor(color);
+        text.update(timePassed.getTimeHuman());
         text.draw();
         graphics.present();
         SDL_Delay((1000 / globals::GAME_FPS) - elapsedTime);
