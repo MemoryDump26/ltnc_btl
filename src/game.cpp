@@ -6,6 +6,7 @@
 #include "player.h"
 #include "weapon.h"
 #include "enemy.h"
+#include "enemymanager.h"
 #include "textbox.h"
 #include "timer.h"
 #include "effects.h"
@@ -113,7 +114,8 @@ void Game::gameLoop() {
     std::srand(std::time(0));
     Player player(&graphics, &data.at("player"), {0, 0});
     Weapon weapon(&graphics, &data.at("weapon"), {0, 0});
-    Enemy test(&graphics, &data.at("enemy"), {1500, 0});
+    //Enemy test(&graphics, &data.at("enemy"), {1500, 0});
+    EnemyManager spawn(&graphics, &data.at("enemy"));
     Effects effects(&graphics);
     TextBox text(&graphics, "assets/fonts/iosevka-regular.ttc", 40);
     SDL_Color color = {255, 255, 255, 255};
@@ -158,28 +160,29 @@ void Game::gameLoop() {
 
         player.update();
         player.draw();
-        test.update(player.getCenter());
-        test.draw();
+        /*test.update(player.getCenter());
+        test.draw();*/
         weapon.update(player.getCenter());
         weapon.draw();
 
-        SDL_SetRenderDrawColor(graphics.getRenderer(), 255, 255, 255, SDL_ALPHA_OPAQUE);
+        /*SDL_SetRenderDrawColor(graphics.getRenderer(), 255, 255, 255, SDL_ALPHA_OPAQUE);
         graphics.drawLine(player.getCenter(), weapon.getCenter());
         graphics.drawLine(weapon.getCenter(), test.getCenter());
-        SDL_SetRenderDrawColor(graphics.getRenderer(), 0, 0, 0, SDL_ALPHA_OPAQUE);
+        SDL_SetRenderDrawColor(graphics.getRenderer(), 0, 0, 0, SDL_ALPHA_OPAQUE);*/
+        spawn.update(player.getCenter());
 
-        if (test.isDead == false) {
-            if (colliding(test.hitbox, player.hitbox)) {
-                test.hit(player.getCenter());
-                player.gotHit(20);
-                std::cout << "hit! " << player.getHealth() << " HP left\n";
-            }
+        for (auto& i : spawn.enemies) {
+            if (i->isDead == false) {
+                if (colliding(i->hitbox, player.hitbox)) {
+                    i->hit(player.getCenter());
+                    player.gotHit(20);
+                }
 
-            if (colliding(weapon.hitbox, test.hitbox)) {
-                weapon.hit();
-                test.gotHit(weapon.getCenter(), weapon.getPower());
-                effects.spawn(&data.at("hiteffect"), test.getCenter());
-                std::cout << "enemy hit!\n";
+                if (colliding(weapon.hitbox, i->hitbox)) {
+                    weapon.hit();
+                    i->gotHit(weapon.getCenter(), weapon.getPower());
+                    effects.spawn(&data.at("hiteffect"), i->getCenter());
+                }
             }
         }
 

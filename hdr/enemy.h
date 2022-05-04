@@ -17,11 +17,11 @@ public:
     Vector2<int>* getCenter();
     Circle hitbox;
     bool isDead = false;
+    Timer hitTimer;
 private:
     Vector2<double> friction;
     Vector2<double> velocity;
     Vector2<double> acceleration;
-    Timer hitTimer;
 };
 
 #endif
