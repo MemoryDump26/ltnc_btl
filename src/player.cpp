@@ -9,14 +9,14 @@
 #include <SDL2/SDL.h>
 
 namespace {
-    const int SPRITE_WIDTH = 250;
-    const int SPRITE_HEIGHT = 500;
-    const double SPRITE_SCALE = 0.25;
+    const double HITBOX_SCALE = 1;
+
     const double GRAVITY_CONST = 2;
-    const double ACCELERATION_CONST = 3;
+    const double ACCELERATION_CONST = 4;
     const double X_FRICTION_CONST = 0.25;
     const double Y_FRICTION_CONST = 0.1;
-    const double JUMP_FORCE = -50;
+    const double JUMP_FORCE = -60;
+
     const int MAX_HEALTH = 100;
 }
 
@@ -30,9 +30,17 @@ enum Direction {
 Player::Player(Graphics* _graphics, TextureData* data, Vector2<int> _spawn) :
     Sprite(_graphics, data, _spawn)
 {
+    hitbox.w = d->width * d->scale * HITBOX_SCALE;
+    hitbox.h = d->height * d->scale * HITBOX_SCALE;
+
+    xBotBound = - d->width * d->scale * (1 - HITBOX_SCALE) / 2;
+    xTopBound =
+        globals::GAME_WIDTH - (d->width * d->scale) * (1 + HITBOX_SCALE) / 2;
+    yBotBound = - d->height * d->scale * (1 - HITBOX_SCALE) / 2;
+    yTopBound =
+        globals::GAME_HEIGHT - (d->height * d->scale) * (1 + HITBOX_SCALE) / 2;
+
     health = MAX_HEALTH;
-    hitbox.w = SPRITE_WIDTH * SPRITE_SCALE;
-    hitbox.h = SPRITE_HEIGHT * SPRITE_SCALE;
     iframe = 0;
 }
 
@@ -44,14 +52,14 @@ void Player::update() {
     friction.y = -velocity.y * Y_FRICTION_CONST;
     velocity += acceleration + friction;
 
-    position.x = clamp(round(position.x + velocity.x), 0.0, globals::GAME_WIDTH - SPRITE_WIDTH * SPRITE_SCALE);
-    position.y = clamp(round(position.y + velocity.y), 0.0, globals::GAME_HEIGHT - SPRITE_HEIGHT * SPRITE_SCALE);
+    position.x = clamp(round(position.x + velocity.x), xBotBound, xTopBound);
+    position.y = clamp(round(position.y + velocity.y), yBotBound, yTopBound);
 
     hitbox.update(position);
 
     center = position + offset;
 
-    if (position.y == globals::GAME_HEIGHT - SPRITE_HEIGHT * SPRITE_SCALE) onGround = true;
+    if (position.y == yTopBound) onGround = true;
     else onGround = false;
 
     if (onGround) {

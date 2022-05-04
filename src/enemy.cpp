@@ -7,22 +7,16 @@
 #include "vector2d.h"
 
 namespace {
-    const double HITBOX_SCALE = 0.333; // pIxEl pERfEcT lol
+    const double HITBOX_SCALE = 0.333;
     const double FRICTION_CONST = -0.1;
     const double KNOCKBACK_CONST = 0.7;
-    // ???? quick maff ???? //
-    /*const int X_BOT_BOUND = - SPRITE_WIDTH * SPRITE_SCALE * (1 - HITBOX_SCALE) / 2;
-    const int X_TOP_BOUND =
-        globals::GAME_WIDTH - (SPRITE_WIDTH * SPRITE_SCALE) * (1 + HITBOX_SCALE) / 2;
-    const int Y_BOT_BOUND = - SPRITE_HEIGHT * SPRITE_SCALE * (1 - HITBOX_SCALE) / 2;
-    const int Y_TOP_BOUND =
-        globals::GAME_HEIGHT - (SPRITE_HEIGHT * SPRITE_SCALE) * (1 + HITBOX_SCALE) / 2;*/
 }
 
 Enemy::Enemy(Graphics* _graphics, TextureData* data, const Vector2<int>& _spawn) :
     Sprite(_graphics, data, _spawn)
 {
     hitbox.r = d->width * d->scale / 2 * HITBOX_SCALE;
+
     xBotBound = - d->width * d->scale * (1 - HITBOX_SCALE) / 2;
     xTopBound =
         globals::GAME_WIDTH - (d->width * d->scale) * (1 + HITBOX_SCALE) / 2;

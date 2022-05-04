@@ -9,11 +9,8 @@
 #include <cmath>
 
 namespace {
-    const char WEAPON_SPRITE[] = "assets/sprites/weapon.png";
-    const int SPRITE_WIDTH = 1000;
-    const int SPRITE_HEIGHT = 1000;
-    const double SPRITE_SCALE = 0.2;
     const double HITBOX_SCALE = 0.333;
+
     const int WEAPON_DISTANCE = 300;
     const int PROJECTILE_VELOCITY = 2;
 }
@@ -21,7 +18,7 @@ namespace {
 Weapon::Weapon(Graphics* _graphics, TextureData* data, const Vector2<int>& _spawn) :
     Sprite(_graphics, data, _spawn)
 {
-    hitbox.r = SPRITE_WIDTH * SPRITE_SCALE / 2 * HITBOX_SCALE;
+    hitbox.r = d->width * d->scale / 2 * HITBOX_SCALE;
 }
 Weapon::~Weapon() {
 
