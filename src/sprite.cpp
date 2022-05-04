@@ -42,19 +42,6 @@ void Sprite::addAnimation() {
     }
 }
 
-void Sprite::addAnimation(std::string animation, size_t start, size_t end, size_t _speed) {
-    numOfFrame[animation] = end - start + 1;
-    speed[animation] = _speed;
-    cooldown = _speed;
-    for (size_t i = start; i <= end; i++) {
-        int col = i % 10;
-        int row = i / 10;
-        SDL_Rect frame = {frameW * col, frameH * row, frameW, frameH};
-        animations[animation].push_back(frame);
-    }
-    if (currAnimation == "") currAnimation = animation;
-}
-
 void Sprite::offsetPosition() {
     position -= offset;
 }

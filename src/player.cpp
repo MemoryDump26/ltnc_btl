@@ -11,7 +11,7 @@
 namespace {
     const double HITBOX_SCALE = 1;
 
-    const double GRAVITY_CONST = 2;
+    const double GRAVITY_CONST = 1.8;
     const double ACCELERATION_CONST = 4;
     const double X_FRICTION_CONST = 0.25;
     const double Y_FRICTION_CONST = 0.1;
@@ -19,13 +19,6 @@ namespace {
 
     const int MAX_HEALTH = 100;
 }
-
-enum Direction {
-    UP,
-    DOWN,
-    LEFT,
-    RIGHT,
-};
 
 Player::Player(Graphics* _graphics, TextureData* data, Vector2<int> _spawn) :
     Sprite(_graphics, data, _spawn)

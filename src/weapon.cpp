@@ -11,6 +11,7 @@
 namespace {
     const double HITBOX_SCALE = 0.333;
 
+    const int WEAPON_COOLDOWN = 30;
     const int WEAPON_DISTANCE = 300;
     const int PROJECTILE_VELOCITY = 2;
 }
@@ -53,7 +54,7 @@ void Weapon::update(const Vector2<int>* player) {
 
 void Weapon::fire() {
     if (cooldown == 0 && power == 2) {
-        cooldown = 50;
+        cooldown = WEAPON_COOLDOWN;
         power = -1;
     }
 }

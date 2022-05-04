@@ -16,7 +16,6 @@ public:
     Sprite();
     Sprite(Graphics* _graphics, TextureData* data, const Vector2<int>& _spawn);
     ~Sprite();
-    void addAnimation(std::string name, size_t start, size_t end, size_t _speed);
     void addAnimation();
     void offsetPosition();
     void setAnimation(std::string name);
@@ -24,7 +23,6 @@ public:
     void pause();
     void resume();
     bool draw();
-    bool drawOnce();
 
 protected:
     TextureData* d;

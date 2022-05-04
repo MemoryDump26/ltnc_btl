@@ -113,9 +113,9 @@ void Game::unloadTexture() {
 
 void Game::gameLoop() {
     std::srand(std::time(0));
+
     Player player(&graphics, &data.at("player"), {0, 0});
     Weapon weapon(&graphics, &data.at("weapon"), {0, 0});
-    //Enemy test(&graphics, &data.at("enemy"), {1500, 0});
     EnemyManager spawn(&graphics, &data.at("enemy"));
     Effects effects(&graphics);
     TextBox text(&graphics, "assets/fonts/iosevka-regular.ttc", 40);
@@ -148,28 +148,11 @@ void Game::gameLoop() {
             weapon.fire();
         }
 
-        if (inputs.isKeyPressed(SDLK_p)) {
-            if (timePassed.isPausing()) {
-                timePassed.resume();
-            }
-            else timePassed.pause();
-        }
-
-        if (inputs.isKeyPressed(SDLK_RETURN)) {
-            timePassed.start();
-        }
-
         player.update();
         player.draw();
-        /*test.update(player.getCenter());
-        test.draw();*/
         weapon.update(player.getCenter());
         weapon.draw();
 
-        /*SDL_SetRenderDrawColor(graphics.getRenderer(), 255, 255, 255, SDL_ALPHA_OPAQUE);
-        graphics.drawLine(player.getCenter(), weapon.getCenter());
-        graphics.drawLine(weapon.getCenter(), test.getCenter());
-        SDL_SetRenderDrawColor(graphics.getRenderer(), 0, 0, 0, SDL_ALPHA_OPAQUE);*/
         spawn.update(player.getCenter());
 
         for (auto& i : spawn.enemies) {
