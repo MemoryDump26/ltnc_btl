@@ -46,6 +46,7 @@ void Enemy::update(const Vector2<int>* player) {
     }
 
     velocity += acceleration + friction;
+
     position.x += velocity.x;
     position.y += velocity.y;
 
@@ -60,6 +61,7 @@ void Enemy::update(const Vector2<int>* player) {
 
     position.x = clamp(round(position.x + velocity.x), xBotBound, xTopBound);
     position.y = clamp(round(position.y + velocity.y), yBotBound, yTopBound);
+
     center = position + offset;
 
     hitbox.update(center);
@@ -89,6 +91,7 @@ void Enemy::gotHit(const Vector2<int>* wPos, int damage) {
 void Enemy::died() {
     looping(false);
     setAnimation("died");
+    isDead = true;
 }
 
 Vector2<int>* Enemy::getCenter() {

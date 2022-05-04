@@ -168,17 +168,19 @@ void Game::gameLoop() {
         graphics.drawLine(weapon.getCenter(), test.getCenter());
         SDL_SetRenderDrawColor(graphics.getRenderer(), 0, 0, 0, SDL_ALPHA_OPAQUE);
 
-        if (colliding(test.hitbox, player.hitbox)) {
-            test.hit(player.getCenter());
-            player.gotHit(20);
-            std::cout << "hit! " << player.getHealth() << " HP left\n";
-        }
+        if (test.isDead == false) {
+            if (colliding(test.hitbox, player.hitbox)) {
+                test.hit(player.getCenter());
+                player.gotHit(20);
+                std::cout << "hit! " << player.getHealth() << " HP left\n";
+            }
 
-        if (colliding(weapon.hitbox, test.hitbox)) {
-            weapon.hit();
-            test.gotHit(weapon.getCenter(), weapon.getPower());
-            effects.spawn(&data.at("hiteffect"), test.getCenter());
-            std::cout << "enemy hit!\n";
+            if (colliding(weapon.hitbox, test.hitbox)) {
+                weapon.hit();
+                test.gotHit(weapon.getCenter(), weapon.getPower());
+                effects.spawn(&data.at("hiteffect"), test.getCenter());
+                std::cout << "enemy hit!\n";
+            }
         }
 
         effects.update();
