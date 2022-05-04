@@ -10,6 +10,7 @@ public:
     Timer();
     ~Timer();
     void start();
+    void stop();
     void pause();
     void resume();
     bool isPausing();

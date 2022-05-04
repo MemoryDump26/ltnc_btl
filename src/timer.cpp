@@ -13,6 +13,11 @@ void Timer::start() {
     pausing = false;
 }
 
+void Timer::stop() {
+    pausedTime = 0;
+    pausing = true;
+}
+
 void Timer::pause() {
     if (pausing == false) {
         pausedTime = SDL_GetTicks64() - startTime;

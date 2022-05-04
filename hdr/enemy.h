@@ -4,6 +4,7 @@
 #include "sprite.h"
 #include "area2d.h"
 #include "vector2d.h"
+#include "timer.h"
 
 class Enemy : public Sprite {
 public:
@@ -19,7 +20,8 @@ private:
     Vector2<double> friction;
     Vector2<double> velocity;
     Vector2<double> acceleration;
-    int hitTimer = 0;
+    //int hitTimer = 0;
+    Timer hitTimer;
 };
 
 #endif
