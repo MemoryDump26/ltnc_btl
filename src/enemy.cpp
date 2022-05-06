@@ -23,6 +23,9 @@ Enemy::Enemy(Graphics* _graphics, TextureData* data, const Vector2<int>& _spawn)
     yBotBound = - d->height * d->scale * (1 - HITBOX_SCALE) / 2;
     yTopBound =
         globals::GAME_HEIGHT - (d->height * d->scale) * (1 + HITBOX_SCALE) / 2;
+
+    hitTimer.start();
+    setAnimation("hit");
 }
 
 Enemy::~Enemy() {
