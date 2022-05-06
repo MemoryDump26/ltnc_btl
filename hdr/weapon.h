@@ -4,6 +4,7 @@
 #include "sprite.h"
 #include "area2d.h"
 #include "vector2d.h"
+#include "timer.h"
 
 class Weapon : public Sprite{
 public:
@@ -18,7 +19,7 @@ public:
 private:
     Vector2<int> angle;
     Vector2<int> cursor;
-    int cooldown = 0;
+    Timer cooldown;
     int power = 0;
 };
 

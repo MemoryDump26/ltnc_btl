@@ -11,7 +11,7 @@
 namespace {
     const double HITBOX_SCALE = 0.333;
 
-    const int WEAPON_COOLDOWN = 30;
+    const int WEAPON_COOLDOWN = 500;
     const int WEAPON_DISTANCE = 300;
     const int PROJECTILE_VELOCITY = 2;
 }
@@ -28,7 +28,14 @@ Weapon::~Weapon() {
 
 void Weapon::update(const Vector2<int>* player) {
 
-    if (cooldown == 0) {
+    if (cooldown.isPausing() == false && cooldown.getTime() < WEAPON_COOLDOWN) {
+
+        position += angle / PROJECTILE_VELOCITY;
+        center = position + offset;
+
+    }
+    else {
+        cooldown.stop();
         if (power == -1) {
             setAnimation("-1");
         }
@@ -46,20 +53,13 @@ void Weapon::update(const Vector2<int>* player) {
         position -= offset;
         center = position + offset;
     }
-    else {
-
-        position += angle / PROJECTILE_VELOCITY;
-        center = position + offset;
-
-        cooldown--;
-    }
 
     hitbox.update(center);
 }
 
 void Weapon::fire() {
-    if (cooldown == 0 && power == 2) {
-        cooldown = WEAPON_COOLDOWN;
+    if (cooldown.isPausing() == true && power == 2) {
+        cooldown.start();
         power = -1;
     }
 }
@@ -69,7 +69,7 @@ int Weapon::getPower() {
 }
 
 void Weapon::hit() {
-    if (cooldown == 0) {
+    if (cooldown.isPausing() == true) {
         power = clamp(power + 1, 0, 2);
         setAnimation(std::to_string(power));
     }
