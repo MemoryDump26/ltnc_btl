@@ -16,6 +16,7 @@ Enemy::Enemy(Graphics* _graphics, TextureData* data, const Vector2<int>& _spawn)
     Sprite(_graphics, data, _spawn)
 {
     hitbox.r = d->width * d->scale / 2 * HITBOX_SCALE;
+    hitbox.update(center);
 
     xBotBound = - d->width * d->scale * (1 - HITBOX_SCALE) / 2;
     xTopBound =

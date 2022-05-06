@@ -25,6 +25,7 @@ Player::Player(Graphics* _graphics, TextureData* data, Vector2<int> _spawn) :
 {
     hitbox.w = d->width * d->scale * HITBOX_SCALE;
     hitbox.h = d->height * d->scale * HITBOX_SCALE;
+    hitbox.update(position);
 
     xBotBound = - d->width * d->scale * (1 - HITBOX_SCALE) / 2;
     xTopBound =

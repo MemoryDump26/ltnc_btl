@@ -25,7 +25,9 @@ void EnemyManager::update(const Vector2<int>* player) {
     if (spawnTimer.isPausing() == false &&
         spawnTimer.getTime() > spawnRate)
     {
-        Enemy* tmp = new Enemy(graphics, d, {rand() % 1920, rand() % 1080});
+        int spawnX = rand() % 1520 + 200;
+        int spawnY = rand() % 680 + 200;
+        Enemy* tmp = new Enemy(graphics, d, {spawnX, spawnY});
         enemies.push_back(tmp);
         spawnTimer.start();
     }
