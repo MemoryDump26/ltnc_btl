@@ -127,11 +127,21 @@ void Game::gameLoop() {
     SDL_Color color = {255, 255, 255, 255};
     Timer timePassed;
     timePassed.start();
+    SDL_Texture* currBuffer = SDL_CreateTexture(graphics.getRenderer(), SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, globals::GAME_WIDTH, globals::GAME_HEIGHT);
+    SDL_Texture* lastBuffer = SDL_CreateTexture(graphics.getRenderer(), SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, globals::GAME_WIDTH, globals::GAME_HEIGHT);
+    SDL_SetTextureAlphaMod(lastBuffer, 230);
+    SDL_SetTextureBlendMode(lastBuffer, SDL_BLENDMODE_BLEND);
+    SDL_SetTextureBlendMode(currBuffer, SDL_BLENDMODE_BLEND);
+    SDL_Rect* def = new SDL_Rect{0, 0, 1920, 1080};
+    SDL_SetRenderDrawColor(graphics.getRenderer(), 0, 0, 0, 0);
+    SDL_SetRenderDrawBlendMode(graphics.getRenderer(), SDL_BLENDMODE_BLEND);
+    double delayTime = 16;
 
     bool quit = false;
     while (!quit) {
-        Uint64 startTick = SDL_GetTicks64();
+        SDL_SetRenderTarget(graphics.getRenderer(), currBuffer);
         SDL_RenderClear(graphics.getRenderer());
+        graphics.draw(lastBuffer, def, def);
 
         inputs.getInputs();
 
@@ -175,24 +185,37 @@ void Game::gameLoop() {
             }
         }
 
+        if (weapon.getPower() == 2) {
+            delayTime += (35 - delayTime) / 40;
+            SDL_SetTextureAlphaMod(lastBuffer, 250);
+        }
+        else {
+            delayTime -= (delayTime - 16) / 20;
+            SDL_SetTextureAlphaMod(lastBuffer, 230);
+        }
+
         effects.update();
 
         quit = inputs.quitting();
-
-        Uint64 endTick = SDL_GetTicks64();
-        Uint64 elapsedTime = endTick - startTick;
 
         color.r = rand() % 255;
         color.g = rand() % 255;
         color.b = rand() % 255;
 
-        text.setSize(rand() % 50 + 20);
-        text.setPosition({rand() % 1920, rand() % 1080});
         text.setColor(color);
-        text.update(timePassed.getTimeHuman());
+        text.update(std::to_string(delayTime));
         text.draw();
+
+        // This is gonna be fun lol
+        SDL_SetRenderTarget(graphics.getRenderer(), NULL);
+        SDL_RenderClear(graphics.getRenderer());
+        graphics.draw(currBuffer, def, def);
+        SDL_SetRenderTarget(graphics.getRenderer(), lastBuffer);
+        SDL_RenderClear(graphics.getRenderer());
+        graphics.draw(currBuffer, def, def);
         graphics.present();
-        SDL_Delay((1000 / globals::GAME_FPS) - elapsedTime);
+
+        SDL_Delay(delayTime);
     }
 
 }
