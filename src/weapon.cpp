@@ -28,6 +28,10 @@ Weapon::~Weapon() {
 void Weapon::update(const Vector2<int>* player) {
 
     if (cooldown == 0) {
+        if (power == -1) {
+            setAnimation("-1");
+        }
+
         SDL_GetMouseState(&cursor.x, &cursor.y);
         cursor -= *player;
 
@@ -66,6 +70,7 @@ int Weapon::getPower() {
 void Weapon::hit() {
     if (cooldown == 0) {
         power = clamp(power + 1, 0, 2);
+        setAnimation(std::to_string(power));
     }
 }
 
