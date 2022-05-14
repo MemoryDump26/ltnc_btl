@@ -17,6 +17,7 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
+#include <SDL2/SDL_mixer.h>
 
 #include <ctime>
 #include <iostream>
@@ -84,34 +85,74 @@ namespace {
             },
         },
     };
+    std::map<std::string, soundData> sfxData {
+                {
+            "jump",
+            {
+                "assets/soundfx/jump.wav",
+            },
+        },
+        {
+            "fire",
+            {
+                "assets/soundfx/fire.wav",
+            },
+        },
+    };
+    std::map<std::string, musicData> musics {
+        {
+            "music",
+            {
+                "assets/music/1.wav",
+            },
+        },
+    };
 }
 
 Game::Game() {
     SDL_Init(SDL_INIT_EVERYTHING);
     IMG_Init(IMG_INIT_PNG);
     TTF_Init();
+    Mix_Init(MIX_INIT_OGG);
+    Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 1024);
     SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "2");
-    loadTexture();
+    loadData();
     gameLoop();
 }
 
 Game::~Game() {
-    unloadTexture();
+    Mix_CloseAudio();
+    unloadData();
     TTF_Quit();
     IMG_Quit();
+    Mix_Quit();
     SDL_Quit();
 }
 
-void Game::loadTexture() {
+void Game::loadData() {
     for (auto& i : data) {
         i.second.spritesheet = graphics.loadTexture(i.second.path);
     }
+    for (auto& i : sfxData) {
+        i.second.audio = sounds.loadFx(i.second.path);
+    }
+    for (auto& i : musics) {
+        i.second.audio = sounds.loadMusic(i.second.path);
+    }
 }
 
-void Game::unloadTexture() {
+void Game::unloadData() {
     for (auto& i : data) {
         SDL_DestroyTexture(i.second.spritesheet);
         i.second.spritesheet = nullptr;
+    }
+    for (auto& i : sfxData) {
+        Mix_FreeChunk(i.second.audio);
+        i.second.audio = nullptr;
+    }
+    for (auto& i : musics) {
+        Mix_FreeMusic(i.second.audio);
+        i.second.audio = nullptr;
     }
 }
 
@@ -137,6 +178,8 @@ void Game::gameLoop() {
     SDL_SetRenderDrawBlendMode(graphics.getRenderer(), SDL_BLENDMODE_BLEND);
     double delayTime = 16;
 
+    sounds.playMusic(musics.at("music").audio);
+
     bool quit = false;
     while (!quit) {
         SDL_SetRenderTarget(graphics.getRenderer(), currBuffer);
@@ -157,10 +200,21 @@ void Game::gameLoop() {
 
         if (inputs.isKeyPressed(SDLK_SPACE)) {
             player.jump();
+            if (!sounds.isChannelPlaying(0)) {
+                sounds.play(sfxData.at("jump").audio);
+                }
         }
 
         if (inputs.isLeftClick()) {
             weapon.fire();
+        }
+
+        if (inputs.isKeyPressed(SDLK_p)) {
+            sounds.pauseMusic();
+        }
+
+        if (inputs.isKeyPressed(SDLK_r)) {
+            sounds.playMusic(musics.at("music").audio);
         }
 
         player.update();

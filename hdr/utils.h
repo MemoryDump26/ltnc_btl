@@ -2,6 +2,7 @@
 #define UTILS_H
 
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_mixer.h>
 
 #include <vector>
 #include <string>
@@ -20,6 +21,16 @@ struct TextureData {
     const double scale;
     const std::vector<AnimationData> animation;
     SDL_Texture* spritesheet = nullptr;
+};
+
+struct soundData {
+    const std::string path;
+    Mix_Chunk* audio = nullptr;
+};
+
+struct musicData {
+    const std::string path;
+    Mix_Music* audio = nullptr;
 };
 
 template<class T>
