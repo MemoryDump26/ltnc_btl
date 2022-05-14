@@ -6,7 +6,7 @@ Effects::Effects(Graphics* _graphics) :
 
 Effects::~Effects() {}
 
-void Effects::spawn(TextureData* data, const Vector2<int>* _position) {
+void Effects::spawn(TextureData* data, const Vector2* _position) {
     Sprite* tmp = new Sprite(graphics, data, *_position);
     tmp->offsetPosition();
     tmp->looping(false);

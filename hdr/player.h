@@ -7,7 +7,7 @@
 
 class Player : public Sprite{
 public:
-    Player(Graphics* _graphics, TextureData* data, Vector2<int> _position);
+    Player(Graphics* _graphics, TextureData* data, Vector2 _position);
     ~Player();
     void update();
     void moveLeft();
@@ -16,16 +16,16 @@ public:
     void jump();
     void gotHit(int damage);
     int getHealth();
-    Vector2<int>* getCenter();
+    Vector2* getCenter();
     Rectangle hitbox;
 private:
     int health;
     bool onGround;
     bool moving;
     int iframe;
-    Vector2<double> friction;
-    Vector2<double> velocity;
-    Vector2<double> acceleration;
+    Vector2 friction;
+    Vector2 velocity;
+    Vector2 acceleration;
 };
 
 #endif

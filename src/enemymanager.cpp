@@ -9,11 +9,11 @@ EnemyManager::EnemyManager(Graphics* _graphics, TextureData* data) :
 
 EnemyManager::~EnemyManager() {};
 
-void EnemyManager::update(const Vector2<int>* player) {
+void EnemyManager::update(const Vector2* player) {
 
     for (size_t i = 0; i < enemies.size(); i++) {
         enemies[i]->update(player);
-        if (enemies[i]->hitTimer.isPausing() == true && enemies[i]->isDead) {
+        if (enemies[i]->state == DIED && enemies[i]->isDead) {
             delete enemies[i];
             enemies.erase(enemies.begin()+i);
         }
@@ -25,8 +25,8 @@ void EnemyManager::update(const Vector2<int>* player) {
     if (spawnTimer.isPausing() == false &&
         spawnTimer.getTime() > spawnRate)
     {
-        int spawnX = rand() % 1520 + 200;
-        int spawnY = rand() % 680 + 200;
+        float spawnX = rand() % 1520 + 200;
+        float spawnY = rand() % 680 + 200;
         Enemy* tmp = new Enemy(graphics, d, {spawnX, spawnY});
         enemies.push_back(tmp);
         spawnTimer.start();

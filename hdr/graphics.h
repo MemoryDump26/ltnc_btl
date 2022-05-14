@@ -16,7 +16,7 @@ public:
     ~Graphics();
     void present();
     void draw(SDL_Texture* texture, SDL_Rect* src, SDL_Rect* dest);
-    void drawLine(Vector2<int>* src, Vector2<int>* dest);
+    void drawLine(Vector2* src, Vector2* dest);
     SDL_Texture* loadTexture(std::string path);
     SDL_Renderer* getRenderer();
 private:

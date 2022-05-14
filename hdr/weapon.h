@@ -8,17 +8,17 @@
 
 class Weapon : public Sprite{
 public:
-    Weapon(Graphics* _graphics, TextureData* data, const Vector2<int>& _spawn);
+    Weapon(Graphics* _graphics, TextureData* data, const Vector2& _spawn);
     ~Weapon();
-    void update(const Vector2<int>* player);
+    void update(const Vector2* player);
     void fire();
     void hit();
     int getPower();
-    Vector2<int>* getCenter();
+    Vector2* getCenter();
     Circle hitbox;
 private:
-    Vector2<int> angle;
-    Vector2<int> cursor;
+    Vector2 angle;
+    Vector2 cursor;
     Timer cooldown;
     int power = 0;
 };

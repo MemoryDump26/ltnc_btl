@@ -11,13 +11,14 @@ Sprite::Sprite() {
 
 }
 
-Sprite::Sprite(Graphics* _graphics, TextureData* data, const Vector2<int>& _spawn) :
+Sprite::Sprite(Graphics* _graphics, TextureData* data, const Vector2& _spawn) :
     d(data),
     position(_spawn),
     offset(
-        static_cast<int>(data->width * data->scale / 2),
-        static_cast<int>(data->height * data->scale / 2)
+        data->width * data->scale / 2,
+        data->height * data->scale / 2
     ),
+    center(position + offset),
     graphics(_graphics),
     frameW(data->width),
     frameH(data->height),

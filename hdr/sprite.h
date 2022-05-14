@@ -14,7 +14,7 @@
 class Sprite {
 public:
     Sprite();
-    Sprite(Graphics* _graphics, TextureData* data, const Vector2<int>& _spawn);
+    Sprite(Graphics* _graphics, TextureData* data, const Vector2& _spawn);
     ~Sprite();
     void addAnimation();
     void offsetPosition();
@@ -27,13 +27,13 @@ public:
 
 protected:
     TextureData* d;
-    Vector2<int> position;
-    Vector2<int> center;
-    Vector2<int> offset;
-    double xTopBound;
-    double yTopBound;
-    double xBotBound;
-    double yBotBound;
+    Vector2 position;
+    Vector2 offset;
+    Vector2 center;
+    float xTopBound;
+    float yTopBound;
+    float xBotBound;
+    float yBotBound;
 
 private:
     Graphics* graphics;

@@ -225,8 +225,10 @@ void Game::gameLoop() {
         spawn.update(player.getCenter());
 
         for (auto& i : spawn.enemies) {
-            if (i->isDead == false) {
-                if (colliding(i->hitbox, player.hitbox)) {
+            SDL_SetRenderDrawColor(graphics.getRenderer(), 255, 255, 255, 255);
+            graphics.drawLine(player.getCenter(), i->getCenter());
+            if (i->state != DIED) {
+                if (colliding(i->hitbox, player.hitbox) && i->state == ATTACK) {
                     i->hit(player.getCenter());
                     player.gotHit(20);
                 }
@@ -238,6 +240,7 @@ void Game::gameLoop() {
                 }
             }
         }
+        SDL_SetRenderDrawColor(graphics.getRenderer(), 0, 0, 0, 0);
 
         if (weapon.getPower() == 2) {
             delayTime += (35 - delayTime) / 40;

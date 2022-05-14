@@ -20,7 +20,7 @@ namespace {
     const int MAX_HEALTH = 100;
 }
 
-Player::Player(Graphics* _graphics, TextureData* data, Vector2<int> _spawn) :
+Player::Player(Graphics* _graphics, TextureData* data, Vector2 _spawn) :
     Sprite(_graphics, data, _spawn)
 {
     hitbox.w = d->width * d->scale * HITBOX_SCALE;
@@ -99,6 +99,6 @@ int Player::getHealth() {
     return health;
 }
 
-Vector2<int>* Player::getCenter() {
+Vector2* Player::getCenter() {
     return &center;
 }

@@ -13,7 +13,7 @@ Rectangle::Rectangle(int _x, int _y, int _w, int _h) :
 
 Rectangle::~Rectangle() {}
 
-void Rectangle::update(const Vector2<int>& position) {
+void Rectangle::update(const Vector2& position) {
     x = position.x;
     y = position.y;
 }
@@ -28,7 +28,7 @@ Circle::Circle(int _x, int _y, int _r) :
 
 Circle::~Circle() {}
 
-void Circle::update(const Vector2<int>& center) {
+void Circle::update(const Vector2& center) {
     x = center.x;
     y = center.y;
 }

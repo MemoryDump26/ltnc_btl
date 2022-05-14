@@ -12,7 +12,7 @@ class Effects {
 public:
     Effects(Graphics* _graphics);
     ~Effects();
-    void spawn(TextureData* data, const Vector2<int>* _position);
+    void spawn(TextureData* data, const Vector2* _position);
     void update();
 
 private:

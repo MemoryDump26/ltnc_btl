@@ -12,7 +12,7 @@ namespace {
     const double KNOCKBACK_CONST = 0.7;
 }
 
-Enemy::Enemy(Graphics* _graphics, TextureData* data, const Vector2<int>& _spawn) :
+Enemy::Enemy(Graphics* _graphics, TextureData* data, const Vector2& _spawn) :
     Sprite(_graphics, data, _spawn)
 {
     hitbox.r = d->width * d->scale / 2 * HITBOX_SCALE;
@@ -33,7 +33,7 @@ Enemy::~Enemy() {
 
 }
 
-void Enemy::update(const Vector2<int>* player) {
+void Enemy::update(const Vector2* player) {
     acceleration.x = (player->x - center.x) * 0.005;
     acceleration.y = (player->y - center.y) * 0.005;
     friction = velocity * FRICTION_CONST;
@@ -68,6 +68,7 @@ void Enemy::update(const Vector2<int>* player) {
         case DIED:
             looping(false);
             setAnimation("died");
+            if (isPausing()) isDead = true;
             break;
 
     }
@@ -94,8 +95,8 @@ void Enemy::update(const Vector2<int>* player) {
     hitbox.update(center);
 }
 
-void Enemy::hit(const Vector2<int>* pPos) {
-    if (hitTimer.isPausing() == true) {
+void Enemy::hit(const Vector2* pPos) {
+    if (state = ATTACK) {
         velocity.x = (center.x - pPos->x) * KNOCKBACK_CONST;
         velocity.y = (center.y - pPos->y) * KNOCKBACK_CONST;
         hitTimer.start();
@@ -103,23 +104,24 @@ void Enemy::hit(const Vector2<int>* pPos) {
     }
 }
 
-void Enemy::gotHit(const Vector2<int>* wPos, int damage) {
-    velocity.x = (center.x - wPos->x) * KNOCKBACK_CONST;
-    velocity.y = (center.y - wPos->y) * KNOCKBACK_CONST;
-    if (damage == -1) {
-        kill();
-    }
-    else {
-        hitTimer.start();
-        state = HIT;
+void Enemy::gotHit(const Vector2* wPos, int damage) {
+    if (state != DIED) {
+        velocity.x = (center.x - wPos->x) * KNOCKBACK_CONST;
+        velocity.y = (center.y - wPos->y) * KNOCKBACK_CONST;
+        if (damage == -1) {
+            state = DIED;
+        }
+        else {
+            hitTimer.start();
+            state = HIT;
+        }
     }
 }
 
 void Enemy::kill() {
     state = DIED;
-    isDead = true;
 }
 
-Vector2<int>* Enemy::getCenter() {
+Vector2* Enemy::getCenter() {
     return &center;
 }

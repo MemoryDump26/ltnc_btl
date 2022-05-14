@@ -9,7 +9,7 @@ class EnemyManager {
 public:
     EnemyManager(Graphics* _graphics, TextureData* data);
     ~EnemyManager();
-    void update(const Vector2<int>* player);
+    void update(const Vector2* player);
     void setSpawnRate(int _spawnRate);
     void startSpawn();
     void stopSpawn();

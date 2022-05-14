@@ -17,7 +17,7 @@ public:
     void update(std::string text);
     void setSize(int _ptsize);
     void setColor(const SDL_Color& _color);
-    void setPosition(const Vector2<int>& _position);
+    void setPosition(const Vector2& _position);
     void draw();
 
 private:
@@ -25,7 +25,7 @@ private:
     TTF_Font* font;
     int textureW;
     int textureH;
-    Vector2<int> position;
+    Vector2 position;
     SDL_Texture* output;
     SDL_Color color;
 };

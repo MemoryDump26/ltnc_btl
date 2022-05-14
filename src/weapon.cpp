@@ -16,7 +16,7 @@ namespace {
     const int PROJECTILE_VELOCITY = 2;
 }
 
-Weapon::Weapon(Graphics* _graphics, TextureData* data, const Vector2<int>& _spawn) :
+Weapon::Weapon(Graphics* _graphics, TextureData* data, const Vector2& _spawn) :
     Sprite(_graphics, data, _spawn)
 {
     hitbox.r = d->width * d->scale / 2 * HITBOX_SCALE;
@@ -27,7 +27,7 @@ Weapon::~Weapon() {
 
 }
 
-void Weapon::update(const Vector2<int>* player) {
+void Weapon::update(const Vector2* player) {
 
     if (cooldown.isPausing() == false && cooldown.getTime() < WEAPON_COOLDOWN) {
 
@@ -41,7 +41,10 @@ void Weapon::update(const Vector2<int>* player) {
             setAnimation("-1");
         }
 
-        SDL_GetMouseState(&cursor.x, &cursor.y);
+        int cursorX, cursorY;
+        SDL_GetMouseState(&cursorX, &cursorY);
+        cursor.x = cursorX;
+        cursor.y = cursorY;
         cursor -= *player;
 
         double relDist = sqrt(pow(cursor.x, 2) + pow(cursor.y, 2));
@@ -76,6 +79,6 @@ void Weapon::hit() {
     }
 }
 
-Vector2<int>* Weapon::getCenter() {
+Vector2* Weapon::getCenter() {
     return &center;
 }

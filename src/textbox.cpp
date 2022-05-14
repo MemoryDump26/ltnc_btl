@@ -41,7 +41,7 @@ void TextBox::setColor(const SDL_Color& _color) {
     color = _color;
 }
 
-void TextBox::setPosition(const Vector2<int> &_position) {
+void TextBox::setPosition(const Vector2 &_position) {
     position = _position;
 }
 

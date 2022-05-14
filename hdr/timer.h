@@ -17,8 +17,8 @@ public:
     Uint64 getTime();
     std::string getTimeHuman();
 private:
-    Uint64 startTime;
-    Uint64 pausedTime;
+    Uint64 startTime = 0;
+    Uint64 pausedTime = 0;
     bool pausing;
 };
 
