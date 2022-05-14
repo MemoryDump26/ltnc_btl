@@ -34,12 +34,13 @@ Enemy::~Enemy() {
 }
 
 void Enemy::update(const Vector2* player) {
-    acceleration.x = (player->x - center.x) * 0.005;
-    acceleration.y = (player->y - center.y) * 0.005;
+    acceleration = (*player - center) * 0.005;
     friction = velocity * FRICTION_CONST;
 
     switch (state) {
         case SPAWN:
+            acceleration *= 0.01;
+            friction *= 0.5;
             looping(false);
             setAnimation("hit");
             if (isPausing()) {
@@ -75,8 +76,7 @@ void Enemy::update(const Vector2* player) {
 
     velocity += acceleration + friction;
 
-    position.x += velocity.x;
-    position.y += velocity.y;
+    position += velocity;
 
     if (position.x >= xTopBound ||
         position.x <= xBotBound) {
@@ -96,9 +96,8 @@ void Enemy::update(const Vector2* player) {
 }
 
 void Enemy::hit(const Vector2* pPos) {
-    if (state = ATTACK) {
-        velocity.x = (center.x - pPos->x) * KNOCKBACK_CONST;
-        velocity.y = (center.y - pPos->y) * KNOCKBACK_CONST;
+    if (state == ATTACK) {
+        velocity = (center - *pPos) * KNOCKBACK_CONST;
         hitTimer.start();
         state = HIT;
     }
@@ -106,8 +105,7 @@ void Enemy::hit(const Vector2* pPos) {
 
 void Enemy::gotHit(const Vector2* wPos, int damage) {
     if (state != DIED) {
-        velocity.x = (center.x - wPos->x) * KNOCKBACK_CONST;
-        velocity.y = (center.y - wPos->y) * KNOCKBACK_CONST;
+        velocity = (center - *wPos) * KNOCKBACK_CONST;
         if (damage == -1) {
             state = DIED;
         }

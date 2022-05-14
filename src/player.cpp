@@ -44,10 +44,11 @@ Player::~Player() {
 void Player::update() {
     friction.x = -velocity.x * X_FRICTION_CONST;
     friction.y = -velocity.y * Y_FRICTION_CONST;
+
     velocity += acceleration + friction;
 
-    position.x = clamp(round(position.x + velocity.x), xBotBound, xTopBound);
-    position.y = clamp(round(position.y + velocity.y), yBotBound, yTopBound);
+    position.x = clamp(position.x + velocity.x, xBotBound, xTopBound);
+    position.y = clamp(position.y + velocity.y, yBotBound, yTopBound);
 
     hitbox.update(position);
 
