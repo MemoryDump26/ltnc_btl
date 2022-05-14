@@ -6,6 +6,13 @@
 #include "vector2d.h"
 #include "timer.h"
 
+enum State {
+    SPAWN,
+    ATTACK,
+    HIT,
+    DIED,
+};
+
 class Enemy : public Sprite {
 public:
     Enemy(Graphics* _graphics, TextureData* data, const Vector2<int>& _spawn);
@@ -13,11 +20,12 @@ public:
     void update(const Vector2<int>* player);
     void hit(const Vector2<int>* pPos);
     void gotHit(const Vector2<int>* wPos, int damage);
-    void died();
+    void kill();
     Vector2<int>* getCenter();
     Circle hitbox;
     bool isDead = false;
     Timer hitTimer;
+    State state = SPAWN;
 private:
     Vector2<double> friction;
     Vector2<double> velocity;

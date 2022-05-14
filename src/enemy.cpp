@@ -38,15 +38,38 @@ void Enemy::update(const Vector2<int>* player) {
     acceleration.y = (player->y - center.y) * 0.005;
     friction = velocity * FRICTION_CONST;
 
-    if (hitTimer.isPausing() == false && hitTimer.getTime() < 1000) {
-        acceleration *= 0.01;
-        friction *= 0.5;
-    }
-    else {
-        hitTimer.stop();
-        looping(true);
-        resume();
-        setAnimation("idle");
+    switch (state) {
+        case SPAWN:
+            looping(false);
+            setAnimation("hit");
+            if (isPausing()) {
+                hitTimer.stop();
+                state = ATTACK;
+            }
+            break;
+
+        case ATTACK:
+            looping(true);
+            resume();
+            setAnimation("idle");
+            break;
+
+        case HIT:
+            acceleration *= 0.01;
+            friction *= 0.5;
+            looping(true);
+            setAnimation("hit");
+            if (hitTimer.getTime() > 1000) {
+                hitTimer.stop();
+                state = ATTACK;
+            }
+            break;
+
+        case DIED:
+            looping(false);
+            setAnimation("died");
+            break;
+
     }
 
     velocity += acceleration + friction;
@@ -63,8 +86,8 @@ void Enemy::update(const Vector2<int>* player) {
         velocity.y *= -0.3;
     }
 
-    position.x = clamp(round(position.x + velocity.x), xBotBound, xTopBound);
-    position.y = clamp(round(position.y + velocity.y), yBotBound, yTopBound);
+    position.x = clamp(round(position.x), xBotBound, xTopBound);
+    position.y = clamp(round(position.y), yBotBound, yTopBound);
 
     center = position + offset;
 
@@ -76,6 +99,7 @@ void Enemy::hit(const Vector2<int>* pPos) {
         velocity.x = (center.x - pPos->x) * KNOCKBACK_CONST;
         velocity.y = (center.y - pPos->y) * KNOCKBACK_CONST;
         hitTimer.start();
+        state = HIT;
     }
 }
 
@@ -83,18 +107,16 @@ void Enemy::gotHit(const Vector2<int>* wPos, int damage) {
     velocity.x = (center.x - wPos->x) * KNOCKBACK_CONST;
     velocity.y = (center.y - wPos->y) * KNOCKBACK_CONST;
     if (damage == -1) {
-        hitTimer.start();
-        died();
+        kill();
     }
     else {
         hitTimer.start();
-        setAnimation("hit");
+        state = HIT;
     }
 }
 
-void Enemy::died() {
-    looping(false);
-    setAnimation("died");
+void Enemy::kill() {
+    state = DIED;
     isDead = true;
 }
 

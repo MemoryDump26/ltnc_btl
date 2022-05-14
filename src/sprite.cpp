@@ -70,11 +70,11 @@ bool Sprite::draw() {
         }
         else cooldown--;
         if (frameIndex >= numOfFrame[currAnimation]) {
-            frameIndex = 0;
             if (loop == false) {
                 pause();
                 return false;
             }
+            else frameIndex = 0;
         }
         return true;
     }
@@ -86,6 +86,10 @@ void Sprite::pause() {
 
 void Sprite::resume() {
     paused = false;
+}
+
+bool Sprite::isPausing() {
+    return paused;
 }
 
 Sprite::~Sprite() {

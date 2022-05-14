@@ -23,6 +23,7 @@ public:
     void pause();
     void resume();
     bool draw();
+    bool isPausing();
 
 protected:
     TextureData* d;
