@@ -1,8 +1,15 @@
 #include "enemymanager.h"
 
+namespace {
+    int START_SPAWN_RATE = 5000;
+    int THRESHOLD = 2000;
+    int MAX_SPAWN_RATE = 500;
+}
+
 EnemyManager::EnemyManager(Graphics* _graphics, TextureData* data) :
     graphics(_graphics),
-    d(data)
+    d(data),
+    spawnRate(START_SPAWN_RATE)
 {
     //spawnTimer.start();
 };
@@ -32,7 +39,6 @@ void EnemyManager::update(const Vector2* player) {
         enemies.push_back(tmp);
         spawnTimer.start();
     }
-
 }
 
 void EnemyManager::clear() {
@@ -46,6 +52,12 @@ void EnemyManager::clear() {
 
 void EnemyManager::setSpawnRate(int _spawnRate) {
     spawnRate = _spawnRate;
+}
+
+void EnemyManager::incSpawnRate() {
+    if (spawnRate > THRESHOLD) spawnRate -= 500;
+    else if(spawnRate > MAX_SPAWN_RATE) spawnRate -= 100;
+    printf("Spawnrate increased: %d\n", spawnRate);
 }
 
 void EnemyManager::startSpawn() {spawnTimer.start();}

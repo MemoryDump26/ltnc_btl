@@ -12,6 +12,7 @@ public:
     void update(const Vector2* player);
     void clear();
     void setSpawnRate(int _spawnRate);
+    void incSpawnRate();
     void startSpawn();
     void stopSpawn();
     std::vector<Enemy*> enemies;
@@ -19,7 +20,7 @@ public:
 private:
     Graphics* graphics;
     TextureData* d;
-    int spawnRate = 5000;
+    int spawnRate;
     Timer spawnTimer;
 
 };

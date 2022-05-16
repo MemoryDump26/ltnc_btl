@@ -168,6 +168,7 @@ void Game::gameLoop() {
     TextBox text(&graphics, f_iosevka);
     text.setSize(250);
     Timer timePassed;
+    Timer incDiff;
 
     SDL_Texture* currBuffer = SDL_CreateTexture(graphics.getRenderer(), SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, globals::GAME_WIDTH, globals::GAME_HEIGHT);
     SDL_Texture* lastBuffer = SDL_CreateTexture(graphics.getRenderer(), SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, globals::GAME_WIDTH, globals::GAME_HEIGHT);
@@ -199,6 +200,7 @@ void Game::gameLoop() {
                 if (inputs.isKeyPressed(SDLK_SPACE)) {
                     spawn.startSpawn();
                     timePassed.start();
+                    incDiff.start();
                     text.setPosition({150, 400});
                     state = PLAYING;
                 }
@@ -240,6 +242,11 @@ void Game::gameLoop() {
                 player.draw();
                 weapon.update(player.getCenter());
                 weapon.draw();
+
+                if (incDiff.getTime() > 60000) {
+                    spawn.incSpawnRate();
+                    incDiff.start();
+                }
 
                 spawn.update(player.getCenter());
 
