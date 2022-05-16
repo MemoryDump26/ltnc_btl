@@ -95,7 +95,6 @@ void Player::update() {
     }
 
     if (iframe) iframe--;
-    printf("%d\n", state);
 }
 
 void Player::moveLeft() {

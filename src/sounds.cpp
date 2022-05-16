@@ -27,12 +27,14 @@ void Sounds::pause() {
 }
 
 void Sounds::playMusic(Mix_Music* music) {
-    Mix_PlayMusic(music, -1);
+    if (Mix_PlayingMusic() == 0) {
+        Mix_FadeInMusic(music, -1, 3000);
+    }
 }
 
 void Sounds::pauseMusic() {
     if (Mix_PausedMusic() == 0) {
-        Mix_PauseMusic();
+        Mix_FadeOutMusic(3000);
     }
 }
 
