@@ -5,6 +5,13 @@
 #include "area2d.h"
 #include "vector2d.h"
 
+enum PlayerState {
+    IDLE,
+    RUN,
+    JUMP,
+    DJUMP,
+};
+
 class Player : public Sprite{
 public:
     Player(Graphics* _graphics, TextureData* data, Vector2 _position);
@@ -18,6 +25,7 @@ public:
     int getHealth();
     Vector2* getCenter();
     Rectangle hitbox;
+    PlayerState state = DJUMP;
 private:
     int health;
     bool onGround;

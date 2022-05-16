@@ -6,7 +6,7 @@
 #include "vector2d.h"
 #include "timer.h"
 
-enum State {
+enum EnemyState {
     SPAWN,
     ATTACK,
     HIT,
@@ -25,7 +25,7 @@ public:
     Circle hitbox;
     bool isDead = false;
     Timer hitTimer;
-    State state = SPAWN;
+    EnemyState state = SPAWN;
 private:
     Vector2 friction;
     Vector2 velocity;

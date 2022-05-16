@@ -46,13 +46,38 @@ void Player::update() {
     friction.y = -velocity.y * Y_FRICTION_CONST;
 
     velocity += acceleration + friction;
+    position += velocity;
 
-    position.x = clamp(position.x + velocity.x, xBotBound, xTopBound);
-    position.y = clamp(position.y + velocity.y, yBotBound, yTopBound);
+    position.x = clamp(position.x, xBotBound, xTopBound);
+    position.y = clamp(position.y, yBotBound, yTopBound);
 
     hitbox.update(position);
-
     center = position + offset;
+
+    switch (state) {
+        case IDLE:
+            setAnimation("idle");
+            break;
+        case RUN:
+            setAnimation("run");
+            break;
+        case JUMP:
+            //setAnimation("jump");
+            if (position.y == yTopBound) {
+                onGround = true;
+                state = RUN;
+            }
+            else onGround = false;
+            break;
+        case DJUMP:
+            //setAnimation("jump");
+            if (position.y == yTopBound) {
+                onGround = true;
+                state = RUN;
+            }
+            else onGround = false;
+            break;
+    };
 
     if (position.y == yTopBound) onGround = true;
     else onGround = false;
@@ -66,26 +91,38 @@ void Player::update() {
     }
 
     if (iframe) iframe--;
+    printf("%d\n", state);
 }
 
 void Player::moveLeft() {
     acceleration.x = -ACCELERATION_CONST;
-    setAnimation("run");
+    if (state == IDLE) state = RUN;
+    //setAnimation("run");
 }
 
 void Player::moveRight() {
     acceleration.x = ACCELERATION_CONST;
-    setAnimation("run");
+    if (state == IDLE) state = RUN;
+    //setAnimation("run");
 }
 
 void Player::decelerate() {
     acceleration.x = 0;
-    setAnimation("idle");
+    if (state == RUN) state = IDLE;
+    //setAnimation("idle");
 }
 
 void Player::jump() {
-    if (onGround) {
+    /*if (onGround) {
         acceleration.y = JUMP_FORCE;
+    }*/
+    if (state == JUMP) {
+        acceleration.y = JUMP_FORCE;
+        state = DJUMP;
+    }
+    else if (state != DJUMP) {
+        acceleration.y = JUMP_FORCE;
+        state = JUMP;
     }
 }
 
