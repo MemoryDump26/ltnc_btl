@@ -1,6 +1,11 @@
 #include "timer.h"
+
 #include <SDL2/SDL_timer.h>
+
 #include <string>
+#include <iostream>
+#include <iomanip>
+#include <sstream>
 
 Timer::Timer() {}
 Timer::~Timer() {}
@@ -9,6 +14,11 @@ void Timer::start() {
     startTime = SDL_GetTicks64();
     pausedTime = 0;
     pausing = false;
+}
+
+void Timer::stop() {
+    pausedTime = 0;
+    pausing = true;
 }
 
 void Timer::pause() {
@@ -42,8 +52,9 @@ std::string Timer::getTimeHuman() {
     int hours = seconds / 3600;
     int minutes = seconds % 3600 / 60;
     seconds = seconds % 60;
-    return
-        std::to_string(hours) + ":" +
-        std::to_string(minutes) + ":" +
-        std::to_string(seconds);
+    std::stringstream tmp;
+    tmp << std::setw(2) << std::setfill('0') << hours << ":";
+    tmp << std::setw(2) << std::setfill('0') << minutes << ":";
+    tmp << std::setw(2) << std::setfill('0') << seconds;
+    return tmp.str();
 }

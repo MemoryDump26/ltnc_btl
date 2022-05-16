@@ -1,27 +1,33 @@
 #ifndef WEAPON_H
 #define WEAPON_H
 
-#include "vector2d.h"
-#include "area2d.h"
 #include "sprite.h"
+#include "area2d.h"
+#include "vector2d.h"
+#include "timer.h"
 
-class Graphics;
+enum WeaponState {
+    COOLDOWN,
+    FIRED,
+};
 
 class Weapon : public Sprite{
 public:
-    Weapon(Graphics* _graphics, const Vector2<int>& _spawn);
+    Weapon(Graphics* _graphics, TextureData* data, const Vector2& _spawn);
     ~Weapon();
-    void update(const Vector2<int>* player);
+    void update(const Vector2* player);
     void fire();
     void hit();
     int getPower();
-    Vector2<int>* getCenter();
+    void reset();
+    Vector2* getCenter();
     Circle hitbox;
+    WeaponState state = COOLDOWN;
 private:
-    Vector2<int> angle;
-    Vector2<int> cursor;
-    int cooldown = 0;
-    int power = 0;
+    Vector2 angle;
+    Vector2 cursor;
+    Timer cooldown;
+    int power = -1;
 };
 
 #endif

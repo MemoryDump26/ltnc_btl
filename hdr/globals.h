@@ -1,6 +1,10 @@
 #ifndef GLOBALS_H
 #define GLOBALS_H
 
+#include "utils.h"
+
+#include <map>
+
 namespace globals {
     const char GAME_TITLE[] = "Game";
     const int GAME_WIDTH = 1920;

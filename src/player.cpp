@@ -1,40 +1,40 @@
 #include "player.h"
-#include "graphics.h"
 #include "globals.h"
+#include "graphics.h"
+
 #include "utils.h"
+#include "area2d.h"
+#include "vector2d.h"
+
 #include <SDL2/SDL.h>
 
 namespace {
-    const char PLAYER_SPRITE[] = "assets/sprites/character_debug.png";
-    const int SPRITE_WIDTH = 250;
-    const int SPRITE_HEIGHT = 500;
-    const double SPRITE_SCALE = 0.25;
-    const double GRAVITY_CONST = 2;
-    const double ACCELERATION_CONST = 3;
+    const double HITBOX_SCALE = 0.5;
+
+    const double GRAVITY_CONST = 1.8;
+    const double ACCELERATION_CONST = 4;
     const double X_FRICTION_CONST = 0.25;
     const double Y_FRICTION_CONST = 0.1;
-    const double JUMP_FORCE = -50;
+    const double JUMP_FORCE = -60;
+
     const int MAX_HEALTH = 100;
 }
 
-enum Direction {
-    UP,
-    DOWN,
-    LEFT,
-    RIGHT,
-};
-
-Player::Player(Graphics* _graphics, Vector2<int> _spawn) :
-    Sprite(_graphics, PLAYER_SPRITE, SPRITE_WIDTH, SPRITE_HEIGHT, SPRITE_SCALE, _spawn)
+Player::Player(Graphics* _graphics, TextureData* data, Vector2 _spawn) :
+    Sprite(_graphics, data, _spawn)
 {
-    /*addAnimation("idle", 0, 1, 10);
-    addAnimation("run", 0, 9, 5);*/
-    addAnimation("idle", 0, 0, 1);
-    addAnimation("run", 0, 0, 1);
+    hitbox.w = d->width * d->scale * HITBOX_SCALE;
+    hitbox.h = d->height * d->scale * HITBOX_SCALE;
+    hitbox.update(center);
+
+    xBotBound = - d->width * d->scale * (1 - HITBOX_SCALE) / 2;
+    xTopBound =
+        globals::GAME_WIDTH - (d->width * d->scale) * (1 + HITBOX_SCALE) / 2;
+    yBotBound = - d->height * d->scale * (1 - HITBOX_SCALE) / 2;
+    yTopBound =
+        globals::GAME_HEIGHT - (d->height * d->scale) * (1 + HITBOX_SCALE) / 2;
+
     health = MAX_HEALTH;
-    //hitbox = new SDL_Rect {0, 0, 125, 250};
-    hitbox.w = SPRITE_WIDTH * SPRITE_SCALE;
-    hitbox.h = SPRITE_HEIGHT * SPRITE_SCALE;
     iframe = 0;
 }
 
@@ -42,19 +42,48 @@ Player::~Player() {
 }
 
 void Player::update() {
-
     friction.x = -velocity.x * X_FRICTION_CONST;
     friction.y = -velocity.y * Y_FRICTION_CONST;
+
     velocity += acceleration + friction;
+    position += velocity;
 
-    position.x = clamp(round(position.x + velocity.x), 0.0, globals::GAME_WIDTH - SPRITE_WIDTH * SPRITE_SCALE);
-    position.y = clamp(round(position.y + velocity.y), 0.0, globals::GAME_HEIGHT - SPRITE_HEIGHT * SPRITE_SCALE);
+    position.x = clamp(position.x, xBotBound, xTopBound);
+    position.y = clamp(position.y, yBotBound, yTopBound);
 
-    hitbox.update(position);
-
+    hitbox.update(center);
     center = position + offset;
 
-    if (position.y == globals::GAME_HEIGHT - SPRITE_HEIGHT * SPRITE_SCALE) onGround = true;
+    switch (state) {
+        case IDLE:
+            looping(true);
+            setAnimation("idle");
+            break;
+        case RUN:
+            looping(false);
+            setAnimation("run");
+            break;
+        case JUMP:
+            looping(false);
+            setAnimation("jump");
+            if (position.y == yTopBound) {
+                onGround = true;
+                state = RUN;
+            }
+            else onGround = false;
+            break;
+        case DJUMP:
+            looping(false);
+            setAnimation("jump");
+            if (position.y == yTopBound) {
+                onGround = true;
+                state = RUN;
+            }
+            else onGround = false;
+            break;
+    };
+
+    if (position.y == yTopBound) onGround = true;
     else onGround = false;
 
     if (onGround) {
@@ -70,29 +99,35 @@ void Player::update() {
 
 void Player::moveLeft() {
     acceleration.x = -ACCELERATION_CONST;
-    setAnimation("run");
+    if (state == IDLE) state = RUN;
 }
 
 void Player::moveRight() {
     acceleration.x = ACCELERATION_CONST;
-    setAnimation("run");
+    if (state == IDLE) state = RUN;
 }
 
 void Player::decelerate() {
     acceleration.x = 0;
-    setAnimation("idle");
+    if (state == RUN) state = IDLE;
 }
 
 void Player::jump() {
-    if (onGround) {
+    if (state == JUMP) {
         acceleration.y = JUMP_FORCE;
+        resume();
+        state = DJUMP;
+    }
+    else if (state != DJUMP) {
+        acceleration.y = JUMP_FORCE;
+        state = JUMP;
     }
 }
 
 void Player::gotHit(int damage) {
     if (!iframe) {
         health -= damage;
-        iframe = 20;
+        iframe = 30;
     }
 }
 
@@ -100,6 +135,13 @@ int Player::getHealth() {
     return health;
 }
 
-Vector2<int>* Player::getCenter() {
+void Player::reset() {
+    position = {0, 0};
+    health = 100;
+    state = DJUMP;
+    iframe = 0;
+}
+
+Vector2* Player::getCenter() {
     return &center;
 }

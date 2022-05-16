@@ -19,8 +19,8 @@ Graphics::~Graphics() {
 
 }
 
-SDL_Texture* Graphics::loadTexture(const char path[]) {
-    SDL_Surface *surface = IMG_Load(path);
+SDL_Texture* Graphics::loadTexture(std::string path) {
+    SDL_Surface *surface = IMG_Load(path.c_str());
     SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, surface);
     SDL_FreeSurface(surface);
     return texture;
@@ -30,7 +30,7 @@ void Graphics::draw(SDL_Texture* texture, SDL_Rect* src, SDL_Rect* dest)  {
     SDL_RenderCopy(renderer, texture, src, dest);
 }
 
-void Graphics::drawLine(Vector2<int>* src, Vector2<int>* dest) {
+void Graphics::drawLine(Vector2* src, Vector2* dest) {
     SDL_RenderDrawLine(renderer, src->x, src->y, dest->x, dest->y);
 }
 

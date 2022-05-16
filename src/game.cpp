@@ -2,119 +2,312 @@
 #include "globals.h"
 #include "graphics.h"
 #include "inputs.h"
+
 #include "player.h"
 #include "weapon.h"
-#include "textbox.h"
 #include "enemy.h"
-#include "area2d.h"
+#include "enemymanager.h"
+#include "textbox.h"
 #include "timer.h"
+#include "effects.h"
+
+#include "area2d.h"
+#include "utils.h"
+
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
-#include <SDL2/SDL_keycode.h>
 #include <SDL2/SDL_ttf.h>
+#include <SDL2/SDL_mixer.h>
+
 #include <ctime>
 #include <iostream>
+#include <map>
+#include <string>
+
+namespace {
+    std::map<std::string, TextureData> data {
+        {
+            "player",
+            {
+                "assets/sprites/character.png",
+                500,
+                1000,
+                0.3,
+                {
+                    {"default", 0, 3, 2},
+                    {"idle", 0, 3, 2},
+                    {"run", 4, 9, 2},
+                    {"jump", 10, 16, 2},
+                },
+            },
+        },
+        {
+            "weapon",
+            {
+                "assets/sprites/weapon.png",
+                1000,
+                1000,
+                0.5,
+                {
+                    {"default", 0, 1, 3},
+                    {"idle", 0, 1, 3},
+                    {"-1", 0, 1, 3},
+                    {"0", 2, 3, 3},
+                    {"1", 4, 5, 3},
+                    {"2", 6, 29, 1},
+                },
+            },
+        },
+        {
+            "enemy",
+            {
+                "assets/sprites/enemy.png",
+                1000,
+                1000,
+                0.3,
+                {
+                    {"default", 0, 9, 2},
+                    {"idle", 0, 9, 2},
+                    {"hit", 10, 11, 2},
+                    {"died", 12, 24, 2},
+                },
+            },
+        },
+        {
+            "hiteffect",
+            {
+                "assets/sprites/hiteffect.png",
+                1000,
+                1000,
+                0.8,
+                {
+                    {"default", 0, 19, 1},
+                },
+            },
+        },
+    };
+    std::map<std::string, soundData> sfxData {
+                {
+            "jump",
+            {
+                "assets/soundfx/jump.wav",
+            },
+        },
+        {
+            "fire",
+            {
+                "assets/soundfx/fire.wav",
+            },
+        },
+    };
+    std::map<std::string, musicData> musics {
+        {
+            "music",
+            {
+                "assets/music/1.wav",
+            },
+        },
+    };
+}
 
 Game::Game() {
     SDL_Init(SDL_INIT_EVERYTHING);
     IMG_Init(IMG_INIT_PNG);
     TTF_Init();
+    Mix_Init(MIX_INIT_OGG);
+    Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 1024);
+    SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "2");
+    loadData();
     gameLoop();
 }
 
 Game::~Game() {
+    Mix_CloseAudio();
+    unloadData();
     TTF_Quit();
     IMG_Quit();
+    Mix_Quit();
     SDL_Quit();
+}
+
+void Game::loadData() {
+    for (auto& i : data) {
+        i.second.spritesheet = graphics.loadTexture(i.second.path);
+    }
+    for (auto& i : sfxData) {
+        i.second.audio = sounds.loadFx(i.second.path);
+    }
+    for (auto& i : musics) {
+        i.second.audio = sounds.loadMusic(i.second.path);
+    }
+}
+
+void Game::unloadData() {
+    for (auto& i : data) {
+        SDL_DestroyTexture(i.second.spritesheet);
+        i.second.spritesheet = nullptr;
+    }
+    for (auto& i : sfxData) {
+        Mix_FreeChunk(i.second.audio);
+        i.second.audio = nullptr;
+    }
+    for (auto& i : musics) {
+        Mix_FreeMusic(i.second.audio);
+        i.second.audio = nullptr;
+    }
 }
 
 void Game::gameLoop() {
     std::srand(std::time(0));
-    Graphics graphics;
-    Inputs inputs;
-    Player player(&graphics, {0, 0});
-    Weapon weapon(&graphics, {0, 0});
-    TextBox text(&graphics, "assets/fonts/iosevka-regular.ttc", 20);
-    Enemy test(&graphics, {1000, 0});
-    SDL_Color color = {255, 255, 255, 255};
+
+    Player player(&graphics, &data.at("player"), {0, 0});
+    Weapon weapon(&graphics, &data.at("weapon"), {0, 0});
+    EnemyManager spawn(&graphics, &data.at("enemy"));
+    Effects effects(&graphics);
+    TTF_Font* f_iosevka = TTF_OpenFont("assets/fonts/iosevka-regular.ttc", 60);
+    TextBox text(&graphics, f_iosevka);
+    text.setSize(250);
     Timer timePassed;
-    timePassed.start();
+    Timer incDiff;
+
+    SDL_Texture* currBuffer = SDL_CreateTexture(graphics.getRenderer(), SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, globals::GAME_WIDTH, globals::GAME_HEIGHT);
+    SDL_Texture* lastBuffer = SDL_CreateTexture(graphics.getRenderer(), SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, globals::GAME_WIDTH, globals::GAME_HEIGHT);
+    SDL_SetTextureAlphaMod(lastBuffer, 230);
+    SDL_SetTextureBlendMode(lastBuffer, SDL_BLENDMODE_BLEND);
+    SDL_SetTextureBlendMode(currBuffer, SDL_BLENDMODE_BLEND);
+    SDL_Rect* def = new SDL_Rect{0, 0, 1920, 1080};
+    SDL_SetRenderDrawColor(graphics.getRenderer(), 0, 0, 0, 0);
+    SDL_SetRenderDrawBlendMode(graphics.getRenderer(), SDL_BLENDMODE_BLEND);
+    float delayTime = 35;
+
+    sounds.playMusic(musics.at("music").audio);
 
     bool quit = false;
     while (!quit) {
-        Uint64 startTick = SDL_GetTicks64();
+        SDL_SetRenderTarget(graphics.getRenderer(), currBuffer);
         SDL_RenderClear(graphics.getRenderer());
+        graphics.draw(lastBuffer, def, def);
 
         inputs.getInputs();
-
-        if (inputs.isKeyHeld(SDLK_d)) {
-            player.moveRight();
-        }
-        else if (inputs.isKeyHeld(SDLK_a)) {
-            player.moveLeft();
-        }
-        else {
-            player.decelerate();
-        }
-
-        if (inputs.isKeyPressed(SDLK_SPACE)) {
-            player.jump();
-        }
-
-        if (inputs.isLeftClick()) {
-            weapon.fire();
-        }
-
-        if (inputs.isKeyPressed(SDLK_p)) {
-            if (timePassed.isPausing()) {
-                timePassed.resume();
-            }
-            else timePassed.pause();
-        }
-
-        if (inputs.isKeyPressed(SDLK_RETURN)) {
-            timePassed.start();
-        }
-
-        player.update();
-        player.draw();
-        test.update(player.getCenter());
-        test.draw();
-        weapon.update(player.getCenter());
-        weapon.draw();
-
-        graphics.drawLine(player.getCenter(), weapon.getCenter());
-        graphics.drawLine(weapon.getCenter(), test.getCenter());
-
-        if (colliding(test.hitbox, player.hitbox)) {
-            test.hit(player.getCenter());
-            player.gotHit(20);
-            std::cout << "hit! " << player.getHealth() << " HP left\n";
-        }
-
-        if (colliding(weapon.hitbox, test.hitbox)) {
-            weapon.hit();
-            test.gotHit(weapon.getCenter(), weapon.getPower());
-            std::cout << "enemy hit!\n";
-        }
-
         quit = inputs.quitting();
 
-        SDL_SetRenderDrawColor(graphics.getRenderer(), 0, 0, 0, SDL_ALPHA_OPAQUE);
+        switch (state) {
+            case MENU:
+                text.setColor({40, 20, 50, 255});
+                text.setPosition({0, 0});
+                text.update("Press space to start!");
+                text.draw();
+                if (inputs.isKeyPressed(SDLK_SPACE)) {
+                    spawn.startSpawn();
+                    timePassed.start();
+                    incDiff.start();
+                    text.setPosition({150, 400});
+                    state = PLAYING;
+                }
+                break;
+            case PLAYING:
+                if (inputs.isKeyHeld(SDLK_d)) {
+                    player.moveRight();
+                }
+                else if (inputs.isKeyHeld(SDLK_a)) {
+                    player.moveLeft();
+                }
+                else {
+                    player.decelerate();
+                }
 
-        Uint64 endTick = SDL_GetTicks64();
-        Uint64 elapsedTime = endTick - startTick;
+                if (inputs.isKeyPressed(SDLK_SPACE)) {
+                    player.jump();
+                    if (!sounds.isChannelPlaying(0)) {
+                        sounds.play(sfxData.at("jump").audio);
+                        }
+                }
 
-        // Look at this mess lmao
-        /*char* elapsedText = new char[10];
-        sprintf(elapsedText, "%d", player.getHealth());*/
-        //const char* elapsedText = timePassed.getTimeHuman().c_str();
-        char* elapsedText = new char[10];
-        sprintf(elapsedText, "%d", timePassed.getTime());
-        text.update(elapsedText, &color);
-        text.draw();
+                if (inputs.isLeftClick()) {
+                    weapon.fire();
+                }
+
+                if (inputs.isKeyPressed(SDLK_p)) {
+                    sounds.pauseMusic();
+                }
+
+                if (inputs.isKeyPressed(SDLK_r)) {
+                    sounds.playMusic(musics.at("music").audio);
+                }
+
+                text.setColor({40, 20, 50, 100});
+                text.update(timePassed.getTimeHuman() + "//" + std::to_string(player.getHealth()));
+                text.draw();
+                player.update();
+                player.draw();
+                weapon.update(player.getCenter());
+                weapon.draw();
+
+                if (incDiff.getTime() > 60000) {
+                    spawn.incSpawnRate();
+                    incDiff.start();
+                }
+
+                spawn.update(player.getCenter());
+
+                for (auto& i : spawn.enemies) {
+                    if (i->state != DIED) {
+                        if (colliding(i->hitbox, player.hitbox) && i->state == ATTACK) {
+                            i->hit(player.getCenter());
+                            if (player.getHealth() == 20) {
+                                state = LOST;
+                                delayTime = 35;
+                            }
+                            else player.gotHit(20);
+                        }
+
+                        if (colliding(weapon.hitbox, i->hitbox)) {
+                            weapon.hit();
+                            i->gotHit(weapon.getCenter(), weapon.getPower());
+                            effects.spawn(&data.at("hiteffect"), i->getCenter());
+                        }
+                    }
+                }
+
+
+                if (weapon.getPower() == 2) {
+                    delayTime += (35 - delayTime) / 40;
+                    SDL_SetTextureAlphaMod(lastBuffer, 250);
+                }
+                else {
+                    delayTime -= (delayTime - 16) / 20;
+                    SDL_SetTextureAlphaMod(lastBuffer, 230);
+                }
+
+                effects.update();
+
+                break;
+            case LOST:
+                text.setColor({40, 20, 50, 255});
+                text.setPosition({0, 0});
+                text.update("Press space to retry!");
+                text.draw();
+                if (inputs.isKeyPressed(SDLK_SPACE)) {
+                    spawn.clear();
+                    spawn.startSpawn();
+                    player.reset();
+                    weapon.reset();
+                    text.setPosition({150, 400});
+                    timePassed.start();
+                    state = PLAYING;
+                }
+                break;
+        }
+
+        // This is gonna be fun lol
+        SDL_SetRenderTarget(graphics.getRenderer(), NULL);
+        SDL_RenderClear(graphics.getRenderer());
+        graphics.draw(currBuffer, def, def);
+        SDL_SetRenderTarget(graphics.getRenderer(), lastBuffer);
+        SDL_RenderClear(graphics.getRenderer());
+        graphics.draw(currBuffer, def, def);
         graphics.present();
-        SDL_Delay((1000 / globals::GAME_FPS) - elapsedTime);
-    }
 
+        SDL_Delay(delayTime);
+    }
 }

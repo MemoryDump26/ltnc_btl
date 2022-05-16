@@ -8,7 +8,7 @@ public:
     Rectangle();
     Rectangle(int _x, int _y, int _w, int _h);
     ~Rectangle();
-    void update(const Vector2<int>& position);
+    void update(const Vector2& position);
     int x;
     int y;
     int w;
@@ -20,7 +20,7 @@ public:
     Circle();
     Circle(int _x, int _y, int _r);
     ~Circle();
-    void update(const Vector2<int>& center);
+    void update(const Vector2& center);
     int x;
     int y;
     int r;

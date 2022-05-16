@@ -1,91 +1,125 @@
 #include "enemy.h"
-#include "graphics.h"
-#include "utils.h"
 #include "globals.h"
+#include "graphics.h"
+
+#include "utils.h"
+#include "area2d.h"
 #include "vector2d.h"
 
 namespace {
-    const char ENEMY_SPRITE[] = "assets/sprites/enemy.png";
-    const int SPRITE_WIDTH = 1000;
-    const int SPRITE_HEIGHT = 1000;
-    const double SPRITE_SCALE = 0.2;
-    const double HITBOX_SCALE = 0.333; // pIxEl pERfEcT lol
+    const double HITBOX_SCALE = 0.333;
     const double FRICTION_CONST = -0.1;
     const double KNOCKBACK_CONST = 0.7;
-    // ???? quick maff ???? //
-    const int X_BOT_BOUND = - SPRITE_WIDTH * SPRITE_SCALE * (1 - HITBOX_SCALE) / 2;
-    const int X_TOP_BOUND =
-        globals::GAME_WIDTH - (SPRITE_WIDTH * SPRITE_SCALE) * (1 + HITBOX_SCALE) / 2;
-    const int Y_BOT_BOUND = - SPRITE_HEIGHT * SPRITE_SCALE * (1 - HITBOX_SCALE) / 2;
-    const int Y_TOP_BOUND =
-        globals::GAME_HEIGHT - (SPRITE_HEIGHT * SPRITE_SCALE) * (1 + HITBOX_SCALE) / 2;
 }
 
-Enemy::Enemy(Graphics* _graphics, const Vector2<int>& _spawn) :
-    Sprite(_graphics, ENEMY_SPRITE, SPRITE_WIDTH, SPRITE_HEIGHT, SPRITE_SCALE, _spawn)
+Enemy::Enemy(Graphics* _graphics, TextureData* data, const Vector2& _spawn) :
+    Sprite(_graphics, data, _spawn)
 {
-    addAnimation("idle", 0, 9, 5);
-    hitbox.r = SPRITE_WIDTH * SPRITE_SCALE / 2 * HITBOX_SCALE;
+    hitbox.r = d->width * d->scale / 2 * HITBOX_SCALE;
+    hitbox.update(center);
+
+    xBotBound = - d->width * d->scale * (1 - HITBOX_SCALE) / 2;
+    xTopBound =
+        globals::GAME_WIDTH - (d->width * d->scale) * (1 + HITBOX_SCALE) / 2;
+    yBotBound = - d->height * d->scale * (1 - HITBOX_SCALE) / 2;
+    yTopBound =
+        globals::GAME_HEIGHT - (d->height * d->scale) * (1 + HITBOX_SCALE) / 2;
+
+    hitTimer.start();
+    setAnimation("hit");
 }
 
 Enemy::~Enemy() {
 
 }
 
-void Enemy::update(const Vector2<int>* player) {
-    acceleration.x = (player->x - center.x) * 0.005;
-    acceleration.y = (player->y - center.y) * 0.005;
+void Enemy::update(const Vector2* player) {
+    acceleration = (*player - center) * 0.005;
     friction = velocity * FRICTION_CONST;
 
-    if (hitTimer != 0) {
-        acceleration *= 0.01;
-        friction *= 0.5;
-        hitTimer--;
+    switch (state) {
+        case SPAWN:
+            acceleration *= 0.01;
+            friction *= 0.5;
+            looping(false);
+            setAnimation("hit");
+            if (isPausing()) {
+                hitTimer.stop();
+                state = ATTACK;
+            }
+            break;
+
+        case ATTACK:
+            looping(true);
+            resume();
+            setAnimation("idle");
+            break;
+
+        case HIT:
+            acceleration *= 0.01;
+            friction *= 0.5;
+            looping(true);
+            setAnimation("hit");
+            if (hitTimer.getTime() > 1000) {
+                hitTimer.stop();
+                state = ATTACK;
+            }
+            break;
+
+        case DIED:
+            looping(false);
+            setAnimation("died");
+            if (isPausing()) isDead = true;
+            break;
+
     }
 
     velocity += acceleration + friction;
-    position.x += velocity.x;
-    position.y += velocity.y;
 
-    if (position.x >= X_TOP_BOUND ||
-        position.x <= X_BOT_BOUND) {
+    position += velocity;
+
+    if (position.x >= xTopBound ||
+        position.x <= xBotBound) {
         velocity.x *= -0.3;
     }
-    if (position.y >= Y_TOP_BOUND ||
-        position.y <= Y_BOT_BOUND) {
+    if (position.y >= yTopBound ||
+        position.y <= yBotBound) {
         velocity.y *= -0.3;
     }
 
-    position.x = clamp(round(position.x + velocity.x), (double)X_BOT_BOUND, (double)X_TOP_BOUND);
-    position.y = clamp(round(position.y + velocity.y), (double)Y_BOT_BOUND, (double)Y_TOP_BOUND);
+    position.x = clamp(round(position.x), xBotBound, xTopBound);
+    position.y = clamp(round(position.y), yBotBound, yTopBound);
+
     center = position + offset;
 
     hitbox.update(center);
 }
 
-void Enemy::hit(const Vector2<int>* pPos) {
-    if (hitTimer == 0) {
-        velocity.x = (center.x - pPos->x) * KNOCKBACK_CONST;
-        velocity.y = (center.y - pPos->y) * KNOCKBACK_CONST;
-        hitTimer = 50;
+void Enemy::hit(const Vector2* pPos) {
+    if (state == ATTACK) {
+        velocity = (center - *pPos) * KNOCKBACK_CONST;
+        hitTimer.start();
+        state = HIT;
     }
 }
 
-void Enemy::gotHit(const Vector2<int>* wPos, int damage) {
-    velocity.x = (center.x - wPos->x) * KNOCKBACK_CONST;
-    velocity.y = (center.y - wPos->y) * KNOCKBACK_CONST;
-    if (damage == 4) {
-        died();
-    }
-    else {
-        hitTimer = 50;
+void Enemy::gotHit(const Vector2* wPos, int damage) {
+    if (state != DIED) {
+        velocity = (center - *wPos) * KNOCKBACK_CONST;
+        if (damage == -1) {
+            state = DIED;
+        }
+        else {
+            hitTimer.start();
+            state = HIT;
+        }
     }
 }
 
-void Enemy::died() {
-    //setAnimation("died");
+void Enemy::kill() {
+    state = DIED;
 }
 
-Vector2<int>* Enemy::getCenter() {
+Vector2* Enemy::getCenter() {
     return &center;
 }

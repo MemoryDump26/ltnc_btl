@@ -1,43 +1,50 @@
 #include "sprite.h"
 #include "graphics.h"
+
 #include "vector2d.h"
+
 #include <SDL2/SDL.h>
+
 #include <iostream>
 
 Sprite::Sprite() {
 
 }
 
-Sprite::Sprite(
-        Graphics* _graphics, const char path[], int _frameW, int _frameH,
-        double scaler, const Vector2<int>& _spawn
-        ) :
-    offset{
-        static_cast<int>(_frameW * scaler / 2),
-        static_cast<int>(_frameH* scaler / 2)
-    },
-    graphics {_graphics},
-    frameW  {_frameW},
-    frameH {_frameH},
-    position {_spawn}
+Sprite::Sprite(Graphics* _graphics, TextureData* data, const Vector2& _spawn) :
+    d(data),
+    position(_spawn),
+    offset(
+        data->width * data->scale / 2,
+        data->height * data->scale / 2
+    ),
+    center(position + offset),
+    graphics(_graphics),
+    frameW(data->width),
+    frameH(data->height),
+    spritesheet(data->spritesheet)
 {
-    spritesheet = graphics->loadTexture(path);
-    scaledW = frameW * scaler;
-    scaledH = frameH * scaler;
-    frameIndex = 0;
+    scaledW = data->width * data->scale;
+    scaledH = data->height * data->scale;
+    addAnimation();
 }
 
-void Sprite::addAnimation(std::string animation, size_t start, size_t end, size_t _speed) {
-    numOfFrame[animation] = end - start + 1;
-    speed[animation] = _speed;
-    cooldown = _speed;
-    for (size_t i = start; i <= end; i++) {
-        int col = i % 10;
-        int row = i / 10;
-        SDL_Rect frame = {frameW * col, frameH * row, frameW, frameH};
-        animations[animation].push_back(frame);
+void Sprite::addAnimation() {
+    for (auto& i : d->animation) {
+        numOfFrame[i.name] = i.end - i.start + 1;
+        speed[i.name] = i.fps; // not really lmao;
+        cooldown = i.fps;
+        for (auto j = i.start; j <= i.end; j++) {
+            int col = j % 10;
+            int row = j / 10;
+            SDL_Rect frame = {d->width * col, d->height * row, d->width, d->height};
+            animations[i.name].push_back(frame);
+        }
     }
-    if (currAnimation == "") currAnimation = animation;
+}
+
+void Sprite::offsetPosition() {
+    position -= offset;
 }
 
 void Sprite::setAnimation(std::string name) {
@@ -47,21 +54,47 @@ void Sprite::setAnimation(std::string name) {
     }
 }
 
-void Sprite::draw() {
+void Sprite::looping(bool _looping) {
+    if (_looping == true) resume();
+    loop = _looping;
+}
 
+bool Sprite::draw() {
     SDL_Rect destination = {position.x, position.y, scaledW, scaledH};
-
     graphics->draw(spritesheet, &animations[currAnimation][frameIndex], &destination);
-
-    if (cooldown == 0) {
-        frameIndex = (frameIndex + 1) % numOfFrame[currAnimation];
-        cooldown = speed[currAnimation];
+    if (paused == true) {
+        return false;
     }
-    else cooldown--;
+    else {
+        if (cooldown == 0) {
+            frameIndex = (frameIndex + 1);
+            cooldown = speed[currAnimation];
+        }
+        else cooldown--;
+        if (frameIndex >= numOfFrame[currAnimation]) {
+            if (loop == false) {
+                pause();
+                frameIndex--;
+                return false;
+            }
+            else frameIndex = 0;
+        }
+        return true;
+    }
+}
+
+void Sprite::pause() {
+    paused = true;
+}
+
+void Sprite::resume() {
+    paused = false;
+}
+
+bool Sprite::isPausing() {
+    return paused;
 }
 
 Sprite::~Sprite() {
 
 }
-
-

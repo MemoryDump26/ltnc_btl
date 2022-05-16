@@ -1,64 +1,69 @@
 #include "weapon.h"
 #include "graphics.h"
+
 #include "utils.h"
+#include "area2d.h"
+#include "vector2d.h"
+
 #include <SDL2/SDL.h>
 #include <cmath>
 
 namespace {
-    const char WEAPON_SPRITE[] = "assets/sprites/weapon.png";
-    const int SPRITE_WIDTH = 1000;
-    const int SPRITE_HEIGHT = 1000;
-    const double SPRITE_SCALE = 0.2;
     const double HITBOX_SCALE = 0.333;
-    const int WEAPON_DISTANCE = 200;
-    const int PROJECTILE_VELOCITY = 3;
+
+    const int WEAPON_COOLDOWN = 500;
+    const int WEAPON_DISTANCE = 300;
+    const int PROJECTILE_VELOCITY = 2;
 }
 
-Weapon::Weapon(Graphics* _graphics, const Vector2<int>& _spawn) :
-    Sprite(_graphics, WEAPON_SPRITE, SPRITE_WIDTH, SPRITE_HEIGHT, SPRITE_SCALE, _spawn)
+Weapon::Weapon(Graphics* _graphics, TextureData* data, const Vector2& _spawn) :
+    Sprite(_graphics, data, _spawn)
 {
-    addAnimation("idle", 0, 9, 2);
-    hitbox.r = SPRITE_WIDTH * SPRITE_SCALE / 2 * HITBOX_SCALE;
+    hitbox.r = d->width * d->scale / 2 * HITBOX_SCALE;
+    hitbox.update(center);
 }
-
 Weapon::~Weapon() {
 
 }
 
-void Weapon::update(const Vector2<int>* player) {
+void Weapon::update(const Vector2* player) {
 
-    if (cooldown == 0) {
-        SDL_GetMouseState(&cursor.x, &cursor.y);
-        cursor -= *player;
+    switch (state) {
+        case FIRED:
+            position += angle / PROJECTILE_VELOCITY;
+            if (cooldown.getTime() > WEAPON_COOLDOWN) {
+                setAnimation("-1");
+                cooldown.stop();
+                state = COOLDOWN;
+            }
+            break;
 
-        double relDist = sqrt(pow(cursor.x, 2) + pow(cursor.y, 2));
+        case COOLDOWN:
+            int cursorX, cursorY;
+            SDL_GetMouseState(&cursorX, &cursorY);
+            cursor.x = cursorX;
+            cursor.y = cursorY;
+            cursor -= *player;
 
-        double scale = relDist / WEAPON_DISTANCE;
-        angle = cursor / scale;
+            double relDist = sqrt(pow(cursor.x, 2) + pow(cursor.y, 2));
 
-        position = *player + angle;
+            double scale = relDist / WEAPON_DISTANCE;
+            angle = cursor / scale;
 
-        position -= offset;
-        center = position + offset;
+            position = *player + angle;
+            position -= offset;
 
-        SDL_SetRenderDrawColor(graphics->getRenderer(), 255, 255, 255, SDL_ALPHA_OPAQUE);
+            break;
     }
-    else {
-
-        position += angle / PROJECTILE_VELOCITY;
-        center = position + offset;
-
-        SDL_SetRenderDrawColor(graphics->getRenderer(), 255, 255, 255, SDL_ALPHA_OPAQUE);
-        cooldown--;
-    }
-
+    center = position + offset;
     hitbox.update(center);
 }
 
 void Weapon::fire() {
-    if (cooldown == 0 && power == 2) {
-        cooldown = 50;
+    if (state == COOLDOWN && power == 2) {
+        cooldown.start();
         power = -1;
+        state = FIRED;
     }
 }
 
@@ -67,11 +72,19 @@ int Weapon::getPower() {
 }
 
 void Weapon::hit() {
-    if (cooldown == 0) {
+    if (state == COOLDOWN) {
         power = clamp(power + 1, 0, 2);
+        setAnimation(std::to_string(power));
     }
 }
 
-Vector2<int>* Weapon::getCenter() {
+void Weapon::reset() {
+    setAnimation("-1");
+    power = -1;
+    cooldown.stop();
+    state = COOLDOWN;
+}
+
+Vector2* Weapon::getCenter() {
     return &center;
 }

@@ -1,4 +1,5 @@
 #include "area2d.h"
+
 #include <algorithm>
 
 Rectangle::Rectangle() {}
@@ -12,9 +13,9 @@ Rectangle::Rectangle(int _x, int _y, int _w, int _h) :
 
 Rectangle::~Rectangle() {}
 
-void Rectangle::update(const Vector2<int>& position) {
-    x = position.x;
-    y = position.y;
+void Rectangle::update(const Vector2& center) {
+    x = center.x - w / 2;
+    y = center.y - h / 2;
 }
 
 Circle::Circle() {}
@@ -27,7 +28,7 @@ Circle::Circle(int _x, int _y, int _r) :
 
 Circle::~Circle() {}
 
-void Circle::update(const Vector2<int>& center) {
+void Circle::update(const Vector2& center) {
     x = center.x;
     y = center.y;
 }

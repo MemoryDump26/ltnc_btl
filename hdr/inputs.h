@@ -1,9 +1,9 @@
 #ifndef INPUTS_H
 #define INPUTS_H
 
-#include <map>
 #include <SDL2/SDL.h>
 
+#include <map>
 
 class Inputs {
 public:
