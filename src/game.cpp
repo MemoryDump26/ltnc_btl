@@ -29,14 +29,15 @@ namespace {
         {
             "player",
             {
-                "assets/sprites/character_debug.png",
-                250,
+                "assets/sprites/character.png",
                 500,
+                1000,
                 0.3,
                 {
-                    {"default", 0, 0, 1},
-                    {"idle", 0, 0, 1},
-                    {"run", 0, 0, 1},
+                    {"default", 0, 3, 2},
+                    {"idle", 0, 3, 2},
+                    {"run", 4, 9, 2},
+                    {"jump", 10, 16, 2},
                 },
             },
         },

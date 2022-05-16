@@ -9,7 +9,7 @@
 #include <SDL2/SDL.h>
 
 namespace {
-    const double HITBOX_SCALE = 1;
+    const double HITBOX_SCALE = 0.5;
 
     const double GRAVITY_CONST = 1.8;
     const double ACCELERATION_CONST = 4;
@@ -25,7 +25,7 @@ Player::Player(Graphics* _graphics, TextureData* data, Vector2 _spawn) :
 {
     hitbox.w = d->width * d->scale * HITBOX_SCALE;
     hitbox.h = d->height * d->scale * HITBOX_SCALE;
-    hitbox.update(position);
+    hitbox.update(center);
 
     xBotBound = - d->width * d->scale * (1 - HITBOX_SCALE) / 2;
     xTopBound =
@@ -51,18 +51,21 @@ void Player::update() {
     position.x = clamp(position.x, xBotBound, xTopBound);
     position.y = clamp(position.y, yBotBound, yTopBound);
 
-    hitbox.update(position);
+    hitbox.update(center);
     center = position + offset;
 
     switch (state) {
         case IDLE:
+            looping(true);
             setAnimation("idle");
             break;
         case RUN:
+            looping(false);
             setAnimation("run");
             break;
         case JUMP:
-            //setAnimation("jump");
+            looping(false);
+            setAnimation("jump");
             if (position.y == yTopBound) {
                 onGround = true;
                 state = RUN;
@@ -70,7 +73,8 @@ void Player::update() {
             else onGround = false;
             break;
         case DJUMP:
-            //setAnimation("jump");
+            looping(false);
+            setAnimation("jump");
             if (position.y == yTopBound) {
                 onGround = true;
                 state = RUN;
@@ -91,6 +95,7 @@ void Player::update() {
     }
 
     if (iframe) iframe--;
+    printf("%d\n", state);
 }
 
 void Player::moveLeft() {
@@ -111,6 +116,7 @@ void Player::decelerate() {
 void Player::jump() {
     if (state == JUMP) {
         acceleration.y = JUMP_FORCE;
+        resume();
         state = DJUMP;
     }
     else if (state != DJUMP) {

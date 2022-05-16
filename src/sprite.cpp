@@ -55,16 +55,17 @@ void Sprite::setAnimation(std::string name) {
 }
 
 void Sprite::looping(bool _looping) {
+    if (_looping == true) resume();
     loop = _looping;
 }
 
 bool Sprite::draw() {
-    if (paused == true) return false;
+    SDL_Rect destination = {position.x, position.y, scaledW, scaledH};
+    graphics->draw(spritesheet, &animations[currAnimation][frameIndex], &destination);
+    if (paused == true) {
+        return false;
+    }
     else {
-        SDL_Rect destination = {position.x, position.y, scaledW, scaledH};
-
-        graphics->draw(spritesheet, &animations[currAnimation][frameIndex], &destination);
-
         if (cooldown == 0) {
             frameIndex = (frameIndex + 1);
             cooldown = speed[currAnimation];
@@ -73,6 +74,7 @@ bool Sprite::draw() {
         if (frameIndex >= numOfFrame[currAnimation]) {
             if (loop == false) {
                 pause();
+                frameIndex--;
                 return false;
             }
             else frameIndex = 0;

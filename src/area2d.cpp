@@ -13,9 +13,9 @@ Rectangle::Rectangle(int _x, int _y, int _w, int _h) :
 
 Rectangle::~Rectangle() {}
 
-void Rectangle::update(const Vector2& position) {
-    x = position.x;
-    y = position.y;
+void Rectangle::update(const Vector2& center) {
+    x = center.x - w / 2;
+    y = center.y - h / 2;
 }
 
 Circle::Circle() {}
