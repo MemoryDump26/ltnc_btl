@@ -4,7 +4,7 @@ EnemyManager::EnemyManager(Graphics* _graphics, TextureData* data) :
     graphics(_graphics),
     d(data)
 {
-    spawnTimer.start();
+    //spawnTimer.start();
 };
 
 EnemyManager::~EnemyManager() {};
@@ -16,6 +16,7 @@ void EnemyManager::update(const Vector2* player) {
         if (enemies[i]->state == DIED && enemies[i]->isDead) {
             delete enemies[i];
             enemies.erase(enemies.begin()+i);
+            i--;
         }
         else {
             enemies[i]->draw();
@@ -33,6 +34,15 @@ void EnemyManager::update(const Vector2* player) {
     }
 
 }
+
+void EnemyManager::clear() {
+    for (size_t i = 0; i < enemies.size(); i++) {
+        delete enemies[i];
+        enemies.erase(enemies.begin()+i);
+        i--;
+    }
+};
+
 
 void EnemyManager::setSpawnRate(int _spawnRate) {
     spawnRate = _spawnRate;

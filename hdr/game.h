@@ -8,6 +8,12 @@
 #include <map>
 #include <string>
 
+enum GameState {
+    MENU,
+    PLAYING,
+    LOST,
+};
+
 class Game {
 public:
     Game();
@@ -15,6 +21,7 @@ public:
     void loadData();
     void unloadData();
     void gameLoop();
+    GameState state = MENU;
 private:
     Graphics graphics;
     Sounds sounds;

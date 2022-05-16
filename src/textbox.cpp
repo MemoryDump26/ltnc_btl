@@ -22,7 +22,7 @@ TextBox::~TextBox () {
 }
 
 void TextBox::update(std::string text) {
-    SDL_Surface* tmp = TTF_RenderText_Blended(font, text.c_str(), color);
+    SDL_Surface* tmp = TTF_RenderText_Blended_Wrapped(font, text.c_str(), color, 1720);
     output = SDL_CreateTextureFromSurface(graphics->getRenderer(), tmp);
     //SDL_FreeSurface(tmp); // ??????
 

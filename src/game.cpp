@@ -165,9 +165,9 @@ void Game::gameLoop() {
     Effects effects(&graphics);
     TTF_Font* f_iosevka = TTF_OpenFont("assets/fonts/iosevka-regular.ttc", 60);
     TextBox text(&graphics, f_iosevka);
-    SDL_Color color = {255, 255, 255, 255};
+    text.setSize(250);
     Timer timePassed;
-    timePassed.start();
+
     SDL_Texture* currBuffer = SDL_CreateTexture(graphics.getRenderer(), SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, globals::GAME_WIDTH, globals::GAME_HEIGHT);
     SDL_Texture* lastBuffer = SDL_CreateTexture(graphics.getRenderer(), SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, globals::GAME_WIDTH, globals::GAME_HEIGHT);
     SDL_SetTextureAlphaMod(lastBuffer, 230);
@@ -176,7 +176,7 @@ void Game::gameLoop() {
     SDL_Rect* def = new SDL_Rect{0, 0, 1920, 1080};
     SDL_SetRenderDrawColor(graphics.getRenderer(), 0, 0, 0, 0);
     SDL_SetRenderDrawBlendMode(graphics.getRenderer(), SDL_BLENDMODE_BLEND);
-    double delayTime = 16;
+    float delayTime = 35;
 
     sounds.playMusic(musics.at("music").audio);
 
@@ -187,78 +187,109 @@ void Game::gameLoop() {
         graphics.draw(lastBuffer, def, def);
 
         inputs.getInputs();
-
-        if (inputs.isKeyHeld(SDLK_d)) {
-            player.moveRight();
-        }
-        else if (inputs.isKeyHeld(SDLK_a)) {
-            player.moveLeft();
-        }
-        else {
-            player.decelerate();
-        }
-
-        if (inputs.isKeyPressed(SDLK_SPACE)) {
-            player.jump();
-            if (!sounds.isChannelPlaying(0)) {
-                sounds.play(sfxData.at("jump").audio);
-                }
-        }
-
-        if (inputs.isLeftClick()) {
-            weapon.fire();
-        }
-
-        if (inputs.isKeyPressed(SDLK_p)) {
-            sounds.pauseMusic();
-        }
-
-        if (inputs.isKeyPressed(SDLK_r)) {
-            sounds.playMusic(musics.at("music").audio);
-        }
-
-        player.update();
-        player.draw();
-        weapon.update(player.getCenter());
-        weapon.draw();
-
-        spawn.update(player.getCenter());
-
-        for (auto& i : spawn.enemies) {
-            if (i->state != DIED) {
-                if (colliding(i->hitbox, player.hitbox) && i->state == ATTACK) {
-                    i->hit(player.getCenter());
-                    player.gotHit(20);
-                }
-
-                if (colliding(weapon.hitbox, i->hitbox)) {
-                    weapon.hit();
-                    i->gotHit(weapon.getCenter(), weapon.getPower());
-                    effects.spawn(&data.at("hiteffect"), i->getCenter());
-                }
-            }
-        }
-
-        if (weapon.getPower() == 2) {
-            delayTime += (35 - delayTime) / 40;
-            SDL_SetTextureAlphaMod(lastBuffer, 250);
-        }
-        else {
-            delayTime -= (delayTime - 16) / 20;
-            SDL_SetTextureAlphaMod(lastBuffer, 230);
-        }
-
-        effects.update();
-
         quit = inputs.quitting();
 
-        color.r = rand() % 255;
-        color.g = rand() % 255;
-        color.b = rand() % 255;
+        switch (state) {
+            case MENU:
+                text.setColor({40, 20, 50, 255});
+                text.setPosition({0, 0});
+                text.update("Press space to start!");
+                text.draw();
+                if (inputs.isKeyPressed(SDLK_SPACE)) {
+                    spawn.startSpawn();
+                    timePassed.start();
+                    text.setPosition({150, 400});
+                    state = PLAYING;
+                }
+                break;
+            case PLAYING:
+                if (inputs.isKeyHeld(SDLK_d)) {
+                    player.moveRight();
+                }
+                else if (inputs.isKeyHeld(SDLK_a)) {
+                    player.moveLeft();
+                }
+                else {
+                    player.decelerate();
+                }
 
-        text.setColor(color);
-        text.update(std::to_string(delayTime));
-        text.draw();
+                if (inputs.isKeyPressed(SDLK_SPACE)) {
+                    player.jump();
+                    if (!sounds.isChannelPlaying(0)) {
+                        sounds.play(sfxData.at("jump").audio);
+                        }
+                }
+
+                if (inputs.isLeftClick()) {
+                    weapon.fire();
+                }
+
+                if (inputs.isKeyPressed(SDLK_p)) {
+                    sounds.pauseMusic();
+                }
+
+                if (inputs.isKeyPressed(SDLK_r)) {
+                    sounds.playMusic(musics.at("music").audio);
+                }
+
+                text.setColor({40, 20, 50, 100});
+                text.update(timePassed.getTimeHuman() + "//" + std::to_string(player.getHealth()));
+                text.draw();
+                player.update();
+                player.draw();
+                weapon.update(player.getCenter());
+                weapon.draw();
+
+                spawn.update(player.getCenter());
+
+                for (auto& i : spawn.enemies) {
+                    if (i->state != DIED) {
+                        if (colliding(i->hitbox, player.hitbox) && i->state == ATTACK) {
+                            i->hit(player.getCenter());
+                            if (player.getHealth() == 20) {
+                                state = LOST;
+                                delayTime = 35;
+                            }
+                            else player.gotHit(20);
+                        }
+
+                        if (colliding(weapon.hitbox, i->hitbox)) {
+                            weapon.hit();
+                            i->gotHit(weapon.getCenter(), weapon.getPower());
+                            effects.spawn(&data.at("hiteffect"), i->getCenter());
+                        }
+                    }
+                }
+
+
+                if (weapon.getPower() == 2) {
+                    delayTime += (35 - delayTime) / 40;
+                    SDL_SetTextureAlphaMod(lastBuffer, 250);
+                }
+                else {
+                    delayTime -= (delayTime - 16) / 20;
+                    SDL_SetTextureAlphaMod(lastBuffer, 230);
+                }
+
+                effects.update();
+
+                break;
+            case LOST:
+                text.setColor({40, 20, 50, 255});
+                text.setPosition({0, 0});
+                text.update("Press space to retry!");
+                text.draw();
+                if (inputs.isKeyPressed(SDLK_SPACE)) {
+                    spawn.clear();
+                    spawn.startSpawn();
+                    player.reset();
+                    weapon.reset();
+                    text.setPosition({150, 400});
+                    timePassed.start();
+                    state = PLAYING;
+                }
+                break;
+        }
 
         // This is gonna be fun lol
         SDL_SetRenderTarget(graphics.getRenderer(), NULL);
@@ -271,5 +302,4 @@ void Game::gameLoop() {
 
         SDL_Delay(delayTime);
     }
-
 }

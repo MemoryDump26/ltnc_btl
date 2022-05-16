@@ -122,12 +122,19 @@ void Player::jump() {
 void Player::gotHit(int damage) {
     if (!iframe) {
         health -= damage;
-        iframe = 20;
+        iframe = 30;
     }
 }
 
 int Player::getHealth() {
     return health;
+}
+
+void Player::reset() {
+    position = {0, 0};
+    health = 100;
+    state = DJUMP;
+    iframe = 0;
 }
 
 Vector2* Player::getCenter() {

@@ -21,7 +21,6 @@ Weapon::Weapon(Graphics* _graphics, TextureData* data, const Vector2& _spawn) :
 {
     hitbox.r = d->width * d->scale / 2 * HITBOX_SCALE;
     hitbox.update(center);
-    power = -1;
 }
 Weapon::~Weapon() {
 
@@ -77,6 +76,13 @@ void Weapon::hit() {
         power = clamp(power + 1, 0, 2);
         setAnimation(std::to_string(power));
     }
+}
+
+void Weapon::reset() {
+    setAnimation("-1");
+    power = -1;
+    cooldown.stop();
+    state = COOLDOWN;
 }
 
 Vector2* Weapon::getCenter() {

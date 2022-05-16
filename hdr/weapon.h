@@ -19,6 +19,7 @@ public:
     void fire();
     void hit();
     int getPower();
+    void reset();
     Vector2* getCenter();
     Circle hitbox;
     WeaponState state = COOLDOWN;
@@ -26,7 +27,7 @@ private:
     Vector2 angle;
     Vector2 cursor;
     Timer cooldown;
-    int power = 0;
+    int power = -1;
 };
 
 #endif

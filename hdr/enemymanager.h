@@ -10,6 +10,7 @@ public:
     EnemyManager(Graphics* _graphics, TextureData* data);
     ~EnemyManager();
     void update(const Vector2* player);
+    void clear();
     void setSpawnRate(int _spawnRate);
     void startSpawn();
     void stopSpawn();

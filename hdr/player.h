@@ -23,6 +23,7 @@ public:
     void jump();
     void gotHit(int damage);
     int getHealth();
+    void reset();
     Vector2* getCenter();
     Rectangle hitbox;
     PlayerState state = DJUMP;
