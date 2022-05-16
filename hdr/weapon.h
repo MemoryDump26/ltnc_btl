@@ -6,6 +6,11 @@
 #include "vector2d.h"
 #include "timer.h"
 
+enum WeaponState {
+    COOLDOWN,
+    FIRED,
+};
+
 class Weapon : public Sprite{
 public:
     Weapon(Graphics* _graphics, TextureData* data, const Vector2& _spawn);
@@ -16,6 +21,7 @@ public:
     int getPower();
     Vector2* getCenter();
     Circle hitbox;
+    WeaponState state = COOLDOWN;
 private:
     Vector2 angle;
     Vector2 cursor;

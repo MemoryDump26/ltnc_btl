@@ -91,31 +91,24 @@ void Player::update() {
     }
 
     if (iframe) iframe--;
-    printf("%d\n", state);
 }
 
 void Player::moveLeft() {
     acceleration.x = -ACCELERATION_CONST;
     if (state == IDLE) state = RUN;
-    //setAnimation("run");
 }
 
 void Player::moveRight() {
     acceleration.x = ACCELERATION_CONST;
     if (state == IDLE) state = RUN;
-    //setAnimation("run");
 }
 
 void Player::decelerate() {
     acceleration.x = 0;
     if (state == RUN) state = IDLE;
-    //setAnimation("idle");
 }
 
 void Player::jump() {
-    /*if (onGround) {
-        acceleration.y = JUMP_FORCE;
-    }*/
     if (state == JUMP) {
         acceleration.y = JUMP_FORCE;
         state = DJUMP;

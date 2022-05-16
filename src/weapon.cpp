@@ -29,42 +29,42 @@ Weapon::~Weapon() {
 
 void Weapon::update(const Vector2* player) {
 
-    if (cooldown.isPausing() == false && cooldown.getTime() < WEAPON_COOLDOWN) {
+    switch (state) {
+        case FIRED:
+            position += angle / PROJECTILE_VELOCITY;
+            if (cooldown.getTime() > WEAPON_COOLDOWN) {
+                setAnimation("-1");
+                cooldown.stop();
+                state = COOLDOWN;
+            }
+            break;
 
-        position += angle / PROJECTILE_VELOCITY;
-        center = position + offset;
+        case COOLDOWN:
+            int cursorX, cursorY;
+            SDL_GetMouseState(&cursorX, &cursorY);
+            cursor.x = cursorX;
+            cursor.y = cursorY;
+            cursor -= *player;
 
+            double relDist = sqrt(pow(cursor.x, 2) + pow(cursor.y, 2));
+
+            double scale = relDist / WEAPON_DISTANCE;
+            angle = cursor / scale;
+
+            position = *player + angle;
+            position -= offset;
+
+            break;
     }
-    else {
-        cooldown.stop();
-        if (power == -1) {
-            setAnimation("-1");
-        }
-
-        int cursorX, cursorY;
-        SDL_GetMouseState(&cursorX, &cursorY);
-        cursor.x = cursorX;
-        cursor.y = cursorY;
-        cursor -= *player;
-
-        double relDist = sqrt(pow(cursor.x, 2) + pow(cursor.y, 2));
-
-        double scale = relDist / WEAPON_DISTANCE;
-        angle = cursor / scale;
-
-        position = *player + angle;
-
-        position -= offset;
-        center = position + offset;
-    }
-
+    center = position + offset;
     hitbox.update(center);
 }
 
 void Weapon::fire() {
-    if (cooldown.isPausing() == true && power == 2) {
+    if (state == COOLDOWN && power == 2) {
         cooldown.start();
         power = -1;
+        state = FIRED;
     }
 }
 
@@ -73,7 +73,7 @@ int Weapon::getPower() {
 }
 
 void Weapon::hit() {
-    if (cooldown.isPausing() == true) {
+    if (state == COOLDOWN) {
         power = clamp(power + 1, 0, 2);
         setAnimation(std::to_string(power));
     }
