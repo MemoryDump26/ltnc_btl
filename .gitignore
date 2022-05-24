@@ -2,6 +2,7 @@
 .cache
 .ccls-cache
 compile_commands.json
+highscore.txt
 
 # Todos
 taskell.md

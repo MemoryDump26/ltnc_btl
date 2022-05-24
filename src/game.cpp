@@ -21,6 +21,7 @@
 
 #include <ctime>
 #include <iostream>
+#include <fstream>
 #include <map>
 #include <string>
 
@@ -166,7 +167,7 @@ void Game::gameLoop() {
     Effects effects(&graphics);
     TTF_Font* f_iosevka = TTF_OpenFont("assets/fonts/iosevka-regular.ttc", 60);
     TextBox text(&graphics, f_iosevka);
-    text.setSize(250);
+    text.setSize(200);
     Timer timePassed;
     Timer incDiff;
 
@@ -195,13 +196,13 @@ void Game::gameLoop() {
             case MENU:
                 text.setColor({40, 20, 50, 255});
                 text.setPosition({0, 0});
-                text.update("Press space to start!");
+                text.update("Press space to start! Highscore: " + getScore());
                 text.draw();
                 if (inputs.isKeyPressed(SDLK_SPACE)) {
                     spawn.startSpawn();
                     timePassed.start();
                     incDiff.start();
-                    text.setPosition({150, 400});
+                    text.setPosition({200, 400});
                     state = PLAYING;
                 }
                 break;
@@ -256,6 +257,7 @@ void Game::gameLoop() {
                             i->hit(player.getCenter());
                             if (player.getHealth() == 20) {
                                 state = LOST;
+                                setScore(timePassed.getTime(), timePassed.getTimeHuman());
                                 delayTime = 35;
                             }
                             else player.gotHit(20);
@@ -285,14 +287,14 @@ void Game::gameLoop() {
             case LOST:
                 text.setColor({40, 20, 50, 255});
                 text.setPosition({0, 0});
-                text.update("Press space to retry!");
+                text.update("Press space to retry! Highscore: " + getScore());
                 text.draw();
                 if (inputs.isKeyPressed(SDLK_SPACE)) {
                     spawn.clear();
                     spawn.startSpawn();
                     player.reset();
                     weapon.reset();
-                    text.setPosition({150, 400});
+                    text.setPosition({200, 400});
                     timePassed.start();
                     state = PLAYING;
                 }
@@ -310,4 +312,31 @@ void Game::gameLoop() {
 
         SDL_Delay(delayTime);
     }
+}
+
+void Game::setScore(int _time, std::string _text) {
+    std::fstream score;
+    score.open("highscore.txt", score.in);
+    int highScore = 0;
+    score >> highScore;
+    printf("old score: %d\n", highScore);
+    score.close();
+    if (_time > highScore) {
+        score.open("highscore.txt", score.out | score.trunc);
+        score << _time << '\n';
+        score << _text;
+        printf("new score: %d\n", _time);
+        score.close();
+    }
+}
+
+std::string Game::getScore() {
+    std::fstream score;
+    score.open("highscore.txt", score.in);
+    int highScore;
+    score >> highScore;
+    std::string result;
+    score >> result;
+    score.close();
+    return result;
 }

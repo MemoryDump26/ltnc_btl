@@ -21,6 +21,8 @@ public:
     void loadData();
     void unloadData();
     void gameLoop();
+    void setScore(int _time, std::string _text);
+    std::string getScore();
     GameState state = MENU;
 private:
     Graphics graphics;
