@@ -41,7 +41,8 @@ void EnemyManager::update(const Vector2* player) {
     }
 }
 
-void EnemyManager::clear() {
+void EnemyManager::reset() {
+    spawnRate = START_SPAWN_RATE;
     for (size_t i = 0; i < enemies.size(); i++) {
         delete enemies[i];
         enemies.erase(enemies.begin()+i);

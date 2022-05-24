@@ -219,7 +219,7 @@ void Game::gameLoop() {
 
                 if (inputs.isKeyPressed(SDLK_SPACE)) {
                     player.jump();
-                    if (!sounds.isChannelPlaying(0)) {
+                    if (player.state != DJUMP) {
                         sounds.play(sfxData.at("jump").audio);
                         }
                 }
@@ -290,7 +290,7 @@ void Game::gameLoop() {
                 text.update("Press space to retry! Highscore: " + getScore());
                 text.draw();
                 if (inputs.isKeyPressed(SDLK_SPACE)) {
-                    spawn.clear();
+                    spawn.reset();
                     spawn.startSpawn();
                     player.reset();
                     weapon.reset();
