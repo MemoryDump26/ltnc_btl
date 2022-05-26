@@ -95,9 +95,21 @@ namespace {
             },
         },
         {
-            "fire",
+            "djump",
             {
-                "assets/soundfx/fire.wav",
+                "assets/soundfx/double_jump.wav",
+            },
+        },
+        {
+            "w_hit",
+            {
+                "assets/soundfx/weapon_hit.wav",
+            },
+        },
+        {
+            "w_ready",
+            {
+                "assets/soundfx/weapon_ready.wav",
             },
         },
     };
@@ -218,10 +230,11 @@ void Game::gameLoop() {
                 }
 
                 if (inputs.isKeyPressed(SDLK_SPACE)) {
-                    player.jump();
-                    if (player.state != DJUMP) {
+                    if (player.state == JUMP) sounds.play(sfxData.at("djump").audio);
+                    else if (player.state != DJUMP) {
                         sounds.play(sfxData.at("jump").audio);
                         }
+                    player.jump();
                 }
 
                 if (inputs.isLeftClick()) {
@@ -267,6 +280,10 @@ void Game::gameLoop() {
                             weapon.hit();
                             i->gotHit(weapon.getCenter(), weapon.getPower());
                             effects.spawn(&data.at("hiteffect"), i->getCenter());
+                            if (weapon.getPower() == 2) {
+                                sounds.play(sfxData.at("w_ready").audio);
+                            }
+                            else sounds.play(sfxData.at("w_hit").audio);
                         }
                     }
                 }

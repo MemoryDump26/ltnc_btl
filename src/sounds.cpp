@@ -15,11 +15,11 @@ Mix_Music* Sounds::loadMusic(std::string path) {
 }
 
 void Sounds::play(Mix_Chunk* fx) {
-    Mix_PlayChannel(0, fx, 0);
+    Mix_PlayChannel(-1, fx, 0);
 }
 
 void Sounds::loop(Mix_Chunk* fx) {
-    Mix_PlayChannel(0, fx, -1);
+    Mix_PlayChannel(-1, fx, -1);
 }
 
 void Sounds::pause() {
