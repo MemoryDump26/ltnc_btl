@@ -17,7 +17,7 @@ void Inputs::getInputs() {
         if (event.type == SDL_QUIT) {
             quit = true;
         }
-        else if (event.type == SDL_KEYDOWN) {
+        else if (event.type == SDL_KEYDOWN && event.key.repeat == false) {
             pressedKeys[event.key.keysym.sym] = true;
             heldKeys[event.key.keysym.sym] = true;
         }
